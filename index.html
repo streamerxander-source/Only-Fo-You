@@ -21,6 +21,10 @@
       --glass: rgba(255, 255, 255, 0.08);
       --glass-strong: rgba(255, 255, 255, 0.12);
       --line: rgba(255, 255, 255, 0.14);
+      --text-main: #fef7fa;
+      --text-muted: #f7dce7;
+      --surface: rgba(18, 8, 15, 0.96);
+      --surface-2: rgba(255, 255, 255, 0.09);
     }
 
     * {
@@ -40,6 +44,43 @@
       align-items: flex-start;
       overflow-x: hidden;
       position: relative;
+      color: var(--text-main);
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    body.light-mode {
+      --text-main: #2f1123;
+      --text-muted: #5c2d46;
+      --surface: rgba(255, 248, 251, 0.92);
+      --surface-2: rgba(255, 216, 228, 0.62);
+      background:
+        radial-gradient(circle at top left, rgba(255, 77, 109, 0.15), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 146, 174, 0.16), transparent 34%),
+        linear-gradient(140deg, #fff7fb 0%, #ffe9ef 48%, #ffd9e4 100%);
+    }
+
+    body.light-mode .app-shell {
+      background: linear-gradient(145deg, rgba(255, 253, 254, 0.62), rgba(255, 240, 245, 0.5));
+      border-color: rgba(255, 77, 109, 0.16);
+      box-shadow: 0 20px 60px rgba(255, 77, 109, 0.16);
+    }
+
+    body.light-mode .button,
+    body.light-mode .file-button,
+    body.light-mode .access-card button,
+    body.light-mode .welcome-close {
+      background: linear-gradient(135deg, #ff5f82, #ff8aa8);
+      color: #fff;
+    }
+
+    body.light-mode .message-card,
+    body.light-mode .counter-card,
+    body.light-mode .music-panel,
+    body.light-mode .access-card,
+    body.light-mode .welcome-card {
+      background: var(--surface);
+      color: var(--text-main);
+      border-color: rgba(255, 77, 109, 0.16);
     }
 
     body::before {
@@ -223,6 +264,21 @@
       background: linear-gradient(135deg, #ff5b76, #ff8ea8);
     }
 
+    .button::before, .file-button::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.24) 50%, transparent 80%);
+      transform: translateX(-120%);
+      transition: transform 0.5s ease;
+      pointer-events: none;
+    }
+
+    .button:hover::before, .file-button:hover::before {
+      transform: translateX(120%);
+    }
+
     .button:active, .file-button:active {
       transform: translateY(0) scale(0.99);
     }
@@ -281,7 +337,7 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      animation: fadeInUp 0.45s ease both;
+      animation: cardRise 0.45s ease both;
     }
 
     .photo-card-actions {
@@ -392,6 +448,7 @@
       align-items: center;
       gap: 12px;
       font-size: 0.95rem;
+      animation: cardRise 0.35s ease both;
     }
 
     .track-item span {
@@ -574,6 +631,75 @@
       margin: 0 auto;
     }
 
+    .theme-toggle,
+    .scroll-top-button {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 10px 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .theme-toggle:hover,
+    .scroll-top-button:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .theme-toggle {
+      margin: 0 auto 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .scroll-top-button {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1300;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .scroll-top-button.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+
+    .celebration-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1400;
+      overflow: hidden;
+      opacity: 0;
+    }
+
+    .celebration-layer.active {
+      opacity: 1;
+    }
+
+    .celebration-heart {
+      position: absolute;
+      font-size: 1.3rem;
+      animation: floatHeart 1.8s ease-out forwards;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+    }
+
     .photo-viewer-close {
       position: absolute;
       top: 16px;
@@ -613,6 +739,40 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @keyframes cardRise {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes floatLogo {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-4px) rotate(-2deg);
+      }
+    }
+
+    @keyframes floatHeart {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) scale(0.6);
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--drift-x), -180px, 0) scale(1.3);
       }
     }
 
@@ -663,6 +823,7 @@
 
   <main class="app-shell hidden" role="application" id="appShell">
     <header>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">🌙 Modo escuro</button>
       <div class="logo">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -812,6 +973,9 @@
     </div>
   </div>
 
+  <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
+  <button class="scroll-top-button hidden" id="scrollTopButton" type="button" aria-label="Voltar ao topo">⬆️</button>
+
   <script>
     const MAX_PHOTOS = 63;
     const photoGallery = document.getElementById('photoGallery');
@@ -880,6 +1044,9 @@
     const specialMessageButton = document.getElementById('specialMessageButton');
     const welcomePopup = document.getElementById('welcomePopup');
     const welcomeClose = document.getElementById('welcomeClose');
+    const themeToggle = document.getElementById('themeToggle');
+    const scrollTopButton = document.getElementById('scrollTopButton');
+    const celebrationLayer = document.getElementById('celebrationLayer');
     const daysCounter = document.getElementById('daysCounter');
     const hoursCounter = document.getElementById('hoursCounter');
     const minutesCounter = document.getElementById('minutesCounter');
@@ -888,6 +1055,7 @@
     const ACCESS_LOCK_KEY = 'claudia-app-unlocked';
     const WELCOME_POPUP_KEY = 'claudia-welcome-seen';
     const BG_PHOTO_KEY = 'claudia-bg-photo';
+    const THEME_KEY = 'claudia-theme';
     const DB_NAME = 'claudia-archive';
     const DB_VERSION = 1;
     const STORE_NAME = 'files';
@@ -936,6 +1104,9 @@
     importInput.addEventListener('change', handleImport);
     backupInput.addEventListener('change', handleBackupImport);
     exportHistoryButton.addEventListener('click', exportHistory);
+    themeToggle.addEventListener('click', toggleTheme);
+    scrollTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    window.addEventListener('scroll', updateScrollTopButton);
     accessForm.addEventListener('submit', event => {
       event.preventDefault();
       const typedCode = accessInput.value.trim();
@@ -1045,6 +1216,10 @@
 
       await Promise.all(importPromises);
 
+      if (!localStorage.getItem(BG_PHOTO_KEY) && photos.length) {
+        setBackgroundPhoto(photos[0].dataUrl);
+      }
+
       let message = `Importação concluída com sucesso! ${newPhotos} foto(s), ${newVideos} vídeo(s)`;
       if (newAudios) {
         message += ` e ${newAudios} música(s)`;
@@ -1132,6 +1307,22 @@
       localStorage.setItem(WELCOME_POPUP_KEY, 'true');
     }
 
+    function toggleTheme() {
+      const isLight = document.body.classList.toggle('light-mode');
+      const nextTheme = isLight ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, nextTheme);
+      if (themeToggle) {
+        themeToggle.textContent = nextTheme === 'light' ? '☀️ Modo claro' : '🌙 Modo escuro';
+      }
+    }
+
+    function applyTheme(theme) {
+      document.body.classList.toggle('light-mode', theme === 'light');
+      if (themeToggle) {
+        themeToggle.textContent = theme === 'light' ? '☀️ Modo claro' : '🌙 Modo escuro';
+      }
+    }
+
     function setBackgroundPhoto(dataUrl) {
       localStorage.setItem(BG_PHOTO_KEY, dataUrl);
       applyBackgroundPhoto(dataUrl);
@@ -1140,6 +1331,29 @@
 
     function applyBackgroundPhoto(dataUrl) {
       document.body.style.backgroundImage = `url(${dataUrl})`;
+    }
+
+    function updateScrollTopButton() {
+      if (!scrollTopButton) return;
+      scrollTopButton.classList.toggle('hidden', window.scrollY < 320);
+    }
+
+    function startBirthdayCelebration() {
+      if (!celebrationLayer) return;
+      celebrationLayer.innerHTML = '';
+      celebrationLayer.classList.add('active');
+      const hearts = 24;
+      for (let i = 0; i < hearts; i += 1) {
+        const heart = document.createElement('div');
+        heart.className = 'celebration-heart';
+        heart.textContent = '💖';
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.top = `${Math.random() * 70 + 12}%`;
+        heart.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 150}px`);
+        heart.style.animationDuration = `${1.4 + Math.random() * 0.8}s`;
+        celebrationLayer.appendChild(heart);
+      }
+      setTimeout(() => celebrationLayer.classList.remove('active'), 2200);
     }
 
     function downloadJSON(filename, data) {
@@ -1352,6 +1566,7 @@
         statusLine.textContent = `Mostrando ${videos.length} vídeo(s).`;
       } else if (section === 'birthday') {
         statusLine.textContent = 'Uma mensagem especial para você, Vida. 🎂';
+        startBirthdayCelebration();
       } else if (section === 'music') {
         statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
       }
@@ -1381,7 +1596,9 @@
       if (savedBg) {
         applyBackgroundPhoto(savedBg);
       }
+      applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
       updateRelationshipCounter();
+      updateScrollTopButton();
       setInterval(updateRelationshipCounter, 60000);
 
       if ('serviceWorker' in navigator && location.protocol !== 'file:') {
