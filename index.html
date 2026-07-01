@@ -380,6 +380,43 @@
       min-height: 1.3em;
     }
 
+    .photo-viewer {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(4, 2, 5, 0.92);
+    }
+
+    .photo-viewer.open {
+      display: flex;
+    }
+
+    .photo-viewer img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .photo-viewer-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -496,6 +533,11 @@
     </section>
   </main>
 
+  <div class="photo-viewer" id="photoViewer" aria-hidden="true">
+    <button class="photo-viewer-close" id="photoViewerClose" type="button" aria-label="Fechar imagem">✕</button>
+    <img id="photoViewerImage" alt="Imagem em tela cheia">
+  </div>
+
   <script>
     const MAX_PHOTOS = 63;
     const photoGallery = document.getElementById('photoGallery');
@@ -510,6 +552,9 @@
     const photosButton = document.getElementById('photosButton');
     const videosButton = document.getElementById('videosButton');
     const musicButton = document.getElementById('musicButton');
+    const photoViewer = document.getElementById('photoViewer');
+    const photoViewerImage = document.getElementById('photoViewerImage');
+    const photoViewerClose = document.getElementById('photoViewerClose');
 
     const photos = [];
     const videos = [];
@@ -599,6 +644,9 @@
     importInput.addEventListener('change', handleImport);
     backupInput.addEventListener('change', handleBackupImport);
     exportHistoryButton.addEventListener('click', exportHistory);
+    photoViewerClose.addEventListener('click', closePhotoViewer);
+    photoViewer.addEventListener('click', closePhotoViewer);
+    photoViewerImage.addEventListener('click', event => event.stopPropagation());
     photosButton.addEventListener('click', () => showSection('photos'));
     videosButton.addEventListener('click', () => showSection('videos'));
     musicButton.addEventListener('click', () => showSection('music'));
@@ -714,6 +762,23 @@
       'Seu corpo me chama, seus olhos me provocam e tudo o que quero é te acariciar lentamente.',
       'Eu adoro jujitar contigo'
     ];
+
+    function openPhotoViewer(src, alt) {
+      if (!photoViewer || !photoViewerImage) return;
+      photoViewerImage.src = src;
+      photoViewerImage.alt = alt;
+      photoViewer.classList.add('open');
+      photoViewer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoViewer() {
+      if (!photoViewer || !photoViewerImage) return;
+      photoViewer.classList.remove('open');
+      photoViewer.setAttribute('aria-hidden', 'true');
+      photoViewerImage.removeAttribute('src');
+      document.body.style.overflow = '';
+    }
 
     function showRandomMessage() {
       const nextMessage = messages[Math.floor(Math.random() * messages.length)];
@@ -864,7 +929,11 @@
       photos.forEach((photo, index) => {
         const card = document.createElement('div');
         card.className = 'photo-card';
-        card.innerHTML = `<img src="${photo.dataUrl}" alt="${photo.name}">`;
+        const image = document.createElement('img');
+        image.src = photo.dataUrl;
+        image.alt = photo.name;
+        image.addEventListener('click', () => openPhotoViewer(photo.dataUrl, photo.name));
+        card.appendChild(image);
         photoGallery.appendChild(card);
       });
     }
