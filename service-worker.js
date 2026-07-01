@@ -1,4 +1,4 @@
-const CACHE_NAME = 'claudia-heart-v3';
+const CACHE_NAME = 'claudia-heart-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

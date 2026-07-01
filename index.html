@@ -79,15 +79,32 @@
       color: #fff;
     }
 
+    body.light-mode {
+      --text-strong: #2f1123;
+      --text-soft: #6a3851;
+      --text-dim: #7f4d64;
+      --surface-card: rgba(255, 248, 251, 0.96);
+      --surface-alt: rgba(255, 255, 255, 0.9);
+      --border-soft: rgba(255, 77, 109, 0.18);
+      --shadow-soft: 0 16px 38px rgba(255, 77, 109, 0.14);
+    }
+
     body.light-mode .message-card,
     body.light-mode .counter-card,
     body.light-mode .music-panel,
     body.light-mode .access-card,
     body.light-mode .welcome-card,
-    body.light-mode .notification-card {
-      background: var(--surface);
-      color: var(--text-main);
-      border-color: rgba(255, 77, 109, 0.16);
+    body.light-mode .notification-card,
+    body.light-mode .diary-entry,
+    body.light-mode .empty-state,
+    body.light-mode .home-card,
+    body.light-mode .screen-hero,
+    body.light-mode .track-item,
+    body.light-mode .notification-toast {
+      background: var(--surface-card);
+      color: var(--text-strong);
+      border-color: var(--border-soft);
+      box-shadow: var(--shadow-soft);
     }
 
     body.light-mode .hero-message,
@@ -100,14 +117,51 @@
     body.light-mode .access-card input,
     body.light-mode .access-card h2,
     body.light-mode .welcome-card p,
-    body.light-mode .welcome-card li {
-      color: var(--text-main);
+    body.light-mode .welcome-card li,
+    body.light-mode .counter-value,
+    body.light-mode .counter-label,
+    body.light-mode .counter-caption,
+    body.light-mode .screen-title,
+    body.light-mode .screen-copy,
+    body.light-mode .home-card-title,
+    body.light-mode .home-card-text,
+    body.light-mode .notification-pill,
+    body.light-mode .diary-entry p,
+    body.light-mode .diary-meta,
+    body.light-mode .theme-toggle,
+    body.light-mode .screen-back,
+    body.light-mode .notification-toast .toast-text,
+    body.light-mode .message-popup-card p,
+    body.light-mode .message-popup-card h3 {
+      color: var(--text-strong);
+    }
+
+    body.light-mode .counter-caption,
+    body.light-mode .home-card-text,
+    body.light-mode .screen-copy,
+    body.light-mode .status-line,
+    body.light-mode .diary-meta,
+    body.light-mode .empty-state,
+    body.light-mode .access-card p,
+    body.light-mode .welcome-card p,
+    body.light-mode .welcome-card li,
+    body.light-mode .notification-pill {
+      color: var(--text-soft);
     }
 
     body.light-mode .track-item button,
-    body.light-mode .access-card input {
-      background: rgba(255, 216, 228, 0.7);
-      border-color: rgba(255, 77, 109, 0.16);
+    body.light-mode .access-card input,
+    body.light-mode .theme-toggle,
+    body.light-mode .screen-back,
+    body.light-mode .message-popup-close {
+      background: rgba(255, 216, 228, 0.88);
+      border-color: var(--border-soft);
+      color: var(--text-strong);
+    }
+
+    body.light-mode .notification-toast {
+      background: rgba(255, 248, 251, 0.98);
+      border-color: var(--border-soft);
     }
 
     body::before {
@@ -247,7 +301,7 @@
 
     .counter-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       margin-top: 10px;
     }
@@ -765,6 +819,59 @@
       line-height: 1.5;
     }
 
+    .message-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 1450;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(6, 3, 7, 0.92);
+    }
+
+    .message-popup.open {
+      display: flex;
+    }
+
+    .message-popup-card {
+      width: min(100%, 500px);
+      padding: 24px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(18, 8, 15, 0.97);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
+      text-align: center;
+      color: #fff;
+    }
+
+    .message-popup-eyebrow {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #ffb8c8;
+      font-weight: 700;
+    }
+
+    .message-popup-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .message-popup-card p {
+      margin: 0 0 16px;
+      line-height: 1.7;
+      color: #ffe7ef;
+      font-size: 1rem;
+    }
+
+    .message-popup-close {
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
     .track-list {
       display: grid;
       gap: 10px;
@@ -1240,7 +1347,7 @@
       <div class="date-chip">Nosso amor começou em 23/05/2024</div>
       <div class="counter-card" aria-live="polite">
         <strong>Tempo do nosso amor</strong>
-        <p class="counter-caption">Contando cada hora, minuto e dia juntos.</p>
+        <p class="counter-caption">Contando cada segundo, minuto, hora e dia juntos.</p>
         <div class="counter-grid">
           <div class="counter-item">
             <div class="counter-value" id="daysCounter">0</div>
@@ -1253,6 +1360,10 @@
           <div class="counter-item">
             <div class="counter-value" id="minutesCounter">0</div>
             <div class="counter-label">Minutos</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-value" id="secondsCounter">0</div>
+            <div class="counter-label">Segundos</div>
           </div>
         </div>
       </div>
@@ -1318,8 +1429,8 @@
         </div>
 
         <div class="notification-card" id="notificationCard">
-          <div class="notification-pill" id="notificationStatus">🔔 Lembretes diários: desativados</div>
-          <button class="button" id="notificationsButton" type="button">🔔 Ativar mensagens da manhã e da noite</button>
+          <div class="notification-pill" id="notificationStatus">🔔 Lembretes: desativados</div>
+          <button class="button" id="notificationsButton" type="button">🔔 Ativar lembretes a cada 5 horas</button>
         </div>
 
         <div class="status-line" id="statusLine">Toque em importar para começar.</div>
@@ -1365,6 +1476,40 @@
           <p style="font-size: 1rem; margin: 14px 0 0 0; opacity: 0.92;">
             Obrigado por existir, por me amar e por tornar minha vida infinitamente mais bonita. Feliz aniversário, meu amor. 🎂✨
           </p>
+        </div>
+      </div>
+
+      <div id="sweetMessagesScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Mensagem doce</h2>
+            <p class="screen-copy">Uma tela só para o seu carinho especial.</p>
+          </div>
+        </div>
+        <div class="message-card visible" style="opacity: 1; transform: translateY(0) scale(1);">
+          <p id="sweetMessageText">Carregando uma mensagem doce para a Cláudia...</p>
+        </div>
+        <div class="controls">
+          <button class="button" id="sweetMessageRefreshButton" type="button">💌 Nova mensagem doce</button>
+          <button class="button" id="sweetMessageCopyButton" type="button">📋 Copiar mensagem</button>
+        </div>
+      </div>
+
+      <div id="specialMessagesScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Mensagens safadas</h2>
+            <p class="screen-copy">Um espaço só seu para momentos mais quentes.</p>
+          </div>
+        </div>
+        <div class="message-card visible" style="opacity: 1; transform: translateY(0) scale(1);">
+          <p id="specialMessageText">Carregando uma mensagem safada para a Cláudia...</p>
+        </div>
+        <div class="controls">
+          <button class="button" id="specialMessageRefreshButton" type="button">🔥 Nova mensagem safada</button>
+          <button class="button" id="specialMessageCopyButton" type="button">📋 Copiar mensagem</button>
         </div>
       </div>
 
@@ -1428,6 +1573,15 @@
     </div>
   </div>
 
+  <div class="message-popup" id="messagePopup" aria-hidden="true">
+    <div class="message-popup-card">
+      <p class="message-popup-eyebrow">Mensagem especial</p>
+      <h3 id="messagePopupTitle">Meu amor</h3>
+      <p id="messagePopupText"></p>
+      <button class="button message-popup-close" id="messagePopupClose" type="button">Fechar</button>
+    </div>
+  </div>
+
   <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
   <button class="scroll-top-button hidden" id="scrollTopButton" type="button" aria-label="Voltar ao topo">⬆️</button>
 
@@ -1442,6 +1596,8 @@
     const photosScreen = document.getElementById('photosScreen');
     const videosScreen = document.getElementById('videosScreen');
     const birthdayScreen = document.getElementById('birthdayScreen');
+    const sweetMessagesScreen = document.getElementById('sweetMessagesScreen');
+    const specialMessagesScreen = document.getElementById('specialMessagesScreen');
     const musicScreen = document.getElementById('musicScreen');
     const diaryScreen = document.getElementById('diaryScreen');
     const importInput = document.getElementById('importInput');
@@ -1495,9 +1651,19 @@
     const defaultMusicUrl = createDefaultMusicDataUrl();
     const messageCard = document.getElementById('messageCard');
     const messageText = document.getElementById('messageText');
+    const sweetMessageText = document.getElementById('sweetMessageText');
+    const specialMessageText = document.getElementById('specialMessageText');
+    const messagePopup = document.getElementById('messagePopup');
+    const messagePopupTitle = document.getElementById('messagePopupTitle');
+    const messagePopupText = document.getElementById('messagePopupText');
+    const messagePopupClose = document.getElementById('messagePopupClose');
     const notificationToast = document.getElementById('notificationToast');
     const notificationToastText = document.getElementById('notificationToastText');
     const newMessageButton = document.getElementById('newMessageButton');
+    const sweetMessageRefreshButton = document.getElementById('sweetMessageRefreshButton');
+    const sweetMessageCopyButton = document.getElementById('sweetMessageCopyButton');
+    const specialMessageRefreshButton = document.getElementById('specialMessageRefreshButton');
+    const specialMessageCopyButton = document.getElementById('specialMessageCopyButton');
     const copyMessageButton = document.getElementById('copyMessageButton');
     const toggleMusicButton = document.getElementById('toggleMusicButton');
     const diaryInput = document.getElementById('diaryInput');
@@ -1516,7 +1682,14 @@
     const daysCounter = document.getElementById('daysCounter');
     const hoursCounter = document.getElementById('hoursCounter');
     const minutesCounter = document.getElementById('minutesCounter');
-    const relationshipStart = new Date('2024-05-23T00:00:00');
+    const secondsCounter = document.getElementById('secondsCounter');
+    const RELATIONSHIP_START_KEY = 'claudia-relationship-start';
+    const DEFAULT_RELATIONSHIP_START = '2024-05-23T00:00:00';
+    const storedRelationshipStart = localStorage.getItem(RELATIONSHIP_START_KEY);
+    const relationshipStart = new Date(storedRelationshipStart || DEFAULT_RELATIONSHIP_START);
+    if (!storedRelationshipStart) {
+      localStorage.setItem(RELATIONSHIP_START_KEY, relationshipStart.toISOString());
+    }
     const ACCESS_CODE = '110223';
     const ACCESS_LOCK_KEY = 'claudia-app-unlocked';
     const WELCOME_POPUP_KEY = 'claudia-welcome-seen';
@@ -1578,7 +1751,7 @@
     window.addEventListener('scroll', updateScrollTopButton);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        scheduleDailyNotifications();
+        schedulePeriodicNotifications();
       }
     });
     accessForm.addEventListener('submit', event => {
@@ -1596,6 +1769,12 @@
       }
     });
     welcomeClose.addEventListener('click', hideWelcomePopup);
+    messagePopupClose.addEventListener('click', hideMessagePopup);
+    messagePopup.addEventListener('click', event => {
+      if (event.target === messagePopup) {
+        hideMessagePopup();
+      }
+    });
     photoViewerClose.addEventListener('click', closePhotoViewer);
     photoViewer.addEventListener('click', closePhotoViewer);
     photoViewerImage.addEventListener('click', event => event.stopPropagation());
@@ -1616,9 +1795,15 @@
         saveDiaryEntry();
       }
     });
-    newMessageButton.addEventListener('click', showRandomMessage);
-    specialMessageButton.addEventListener('click', showSpecialMessage);
-    copyMessageButton.addEventListener('click', copyCurrentMessage);
+    newMessageButton.addEventListener('click', () => openSweetMessageScreen(true));
+    specialMessageButton.addEventListener('click', () => openSpecialMessageScreen(true));
+    sweetMessageRefreshButton.addEventListener('click', () => openSweetMessageScreen(true));
+    sweetMessageCopyButton.addEventListener('click', () => copyTextToClipboard(sweetMessageText?.textContent));
+    specialMessageRefreshButton.addEventListener('click', () => openSpecialMessageScreen(true));
+    specialMessageCopyButton.addEventListener('click', () => copyTextToClipboard(specialMessageText?.textContent));
+    if (copyMessageButton) {
+      copyMessageButton.addEventListener('click', copyCurrentMessage);
+    }
     toggleMusicButton.addEventListener('click', toggleMusicPlayback);
     audioPlayer.addEventListener('play', updateMusicButtonText);
     audioPlayer.addEventListener('pause', updateMusicButtonText);
@@ -1735,7 +1920,7 @@
       'Te desejo como ninguém, sentindo cada curva do seu corpo e cada gemido sussurrado.',
       'Minha vontade é te envolver na cama, explorar cada ponto e fazer você se perder no prazer.',
       'Seu corpo me chama, seus olhos me provocam e tudo o que quero é te acariciar lentamente.',
-      'Eu adoro jujitar contigo.',
+      'Eu adoro te provocar até você ficar sem ar, só com meu beijo e meu toque.',
       'Quero te beijar devagar, como quem quer prolongar cada segundo de desejo.',
       'A sua presença me deixa com vontade de te roubar pra um canto só nosso e te devorar de carinho.',
       'Sei exatamente o que quero fazer com você quando a noite ficar mais quente e silenciosa.',
@@ -1744,7 +1929,17 @@
       'Quero te puxar pra perto e fazer do seu corpo o meu lugar favorito do mundo.',
       'Cada olhar seu me dá vontade de te seduzir com calma e com vontade.',
       'Eu queria te provar devagar, como quem quer saborear todo o prazer que você me oferece.',
-      'A sua voz baixa e o seu jeito me fazem querer te ter só pra mim.'
+      'A sua voz baixa e o seu jeito me fazem querer te ter só pra mim.',
+      'Quero te fazer perder o fôlego com beijos lentos e carinhos que deixam saudade.',
+      'Sua boca me tortura de um jeito tão bom que eu quero repetir sempre.',
+      'Meu desejo por você cresce a cada minuto que eu fico sem te ter perto.',
+      'Se eu pudesse, te levaria para um lugar só nosso onde só existisse beijo, calor e desejo.',
+      'Tenho vontade de te enlouquecer devagar, com carinho, com tesão e com muita ternura.',
+      'Você me faz querer te encontrar em todos os silêncios e em todas as noites.',
+      'Quero te sentir por inteiro e te fazer sentir meu amor em cada toque.',
+      'Eu adoro quando você me olha assim, porque sei que a vontade de ficar junto é igual à minha.',
+      'Uma noite só nossa seria perfeita para te mostrar o quanto eu quero você.',
+      'Meu corpo inteiro anseia por você, por todo o calor do seu abraço e do seu beijo.'
     ];
 
     function openPhotoViewer(src, alt) {
@@ -1764,15 +1959,15 @@
       document.body.style.overflow = '';
     }
 
-    async function copyCurrentMessage() {
-      const text = messageText?.textContent?.trim();
-      if (!text) return;
+    async function copyTextToClipboard(text) {
+      const content = (text || '').trim();
+      if (!content) return;
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text);
+          await navigator.clipboard.writeText(content);
         } else {
           const tempInput = document.createElement('textarea');
-          tempInput.value = text;
+          tempInput.value = content;
           tempInput.setAttribute('readonly', '');
           tempInput.style.position = 'fixed';
           tempInput.style.left = '-9999px';
@@ -1786,6 +1981,10 @@
         console.warn('Não foi possível copiar a mensagem:', error);
         statusLine.textContent = 'Não foi possível copiar a mensagem.';
       }
+    }
+
+    async function copyCurrentMessage() {
+      await copyTextToClipboard(messageText?.textContent);
     }
 
     function updateMusicButtonText() {
@@ -1820,6 +2019,22 @@
       }, 3200);
     }
 
+    function showMessagePopup(title, text) {
+      if (!messagePopup || !messagePopupTitle || !messagePopupText) return;
+      messagePopupTitle.textContent = title;
+      messagePopupText.textContent = text;
+      messagePopup.classList.add('open');
+      messagePopup.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideMessagePopup() {
+      if (!messagePopup) return;
+      messagePopup.classList.remove('open');
+      messagePopup.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
     function showRandomMessage() {
       const nextMessage = messages[Math.floor(Math.random() * messages.length)];
       if (!messageCard || !messageText) return;
@@ -1828,18 +2043,38 @@
         messageText.textContent = nextMessage;
         messageCard.classList.add('visible');
         showNotificationToast(nextMessage);
+        showMessagePopup('Mensagem doce', nextMessage);
       }, 80);
     }
 
-    function showSpecialMessage() {
-      const nextMessage = specialMessages[Math.floor(Math.random() * specialMessages.length)];
-      if (!messageCard || !messageText) return;
-      messageCard.classList.remove('visible');
-      setTimeout(() => {
-        messageText.textContent = nextMessage;
-        messageCard.classList.add('visible');
+    function openSweetMessageScreen(forceNew = false) {
+      const nextMessage = messages[Math.floor(Math.random() * messages.length)];
+      if (sweetMessageText) {
+        sweetMessageText.textContent = forceNew ? nextMessage : (sweetMessageText.textContent?.trim() || nextMessage);
+      }
+      if (messageCard && messageText) {
+        messageText.textContent = sweetMessageText?.textContent || nextMessage;
+      }
+      showScreen('sweetMessages');
+      if (forceNew) {
         showNotificationToast(nextMessage);
-      }, 80);
+        showMessagePopup('Mensagem doce', nextMessage);
+      }
+    }
+
+    function openSpecialMessageScreen(forceNew = false) {
+      const nextMessage = specialMessages[Math.floor(Math.random() * specialMessages.length)];
+      if (specialMessageText) {
+        specialMessageText.textContent = forceNew ? nextMessage : (specialMessageText.textContent?.trim() || nextMessage);
+      }
+      if (messageCard && messageText) {
+        messageText.textContent = specialMessageText?.textContent || nextMessage;
+      }
+      showScreen('specialMessages');
+      if (forceNew) {
+        showNotificationToast(nextMessage);
+        showMessagePopup('Mensagem safada', nextMessage);
+      }
     }
 
     function showWelcomePopup() {
@@ -1894,34 +2129,41 @@
       }
     }
 
-    function getDailyMessage(isMorning) {
-      const pool = isMorning ? [
-        'Bom dia, meu amor. Eu estou pensando em você e desejando que o seu dia seja cheio de carinho e paz.',
-        'Bom dia, vida. Quero que você saiba que o meu amor está com você desde o primeiro instante do seu dia.',
-        'Bom dia, meu amor. Você merece um dia lindo, leve e cheio de sorrisos.'
-      ] : [
-        'Boa noite, meu amor. Eu queria te abraçar agora e te dizer que você é o meu maior carinho.',
-        'Boa noite, princesa. Que o seu descanso seja leve e que o seu coração descanse em paz.',
-        'Boa noite, meu amor. Você é a minha calma, o meu carinho e a minha melhor lembrança do dia.'
-      ];
-      return pool[Math.floor(Math.random() * pool.length)];
+    const notificationPhrases = [
+      'Meu amor, eu estou pensando em você com carinho e saudade neste instante.',
+      'Você é a minha admiração mais bonita, e eu queria te dizer isso hoje de novo.',
+      'Hoje é um ótimo dia para lembrar que você é forte, linda e merecedora de tudo de bom.',
+      'Eu te amo por completo, e quero que você saiba que o seu sorriso é a minha motivação.',
+      'Um pequeno carinho seu já basta para transformar o meu dia inteiro.',
+      'Lembre-se: você merece calma, amor e todos os sonhos que ainda deseja conquistar.',
+      'Seu jeito de ser me faz amar você ainda mais a cada dia.',
+      'A sua presença é uma bênção que eu quero guardar sempre no meu coração.',
+      'Seja gentil com você hoje, porque você merece o melhor cuidado e o maior carinho.',
+      'Eu acredito no seu brilho, na sua força e no quanto você é especial.',
+      'Nunca esqueça: mesmo nos dias mais difíceis, você é amada profundamente.',
+      'Um conselho de amor: reserve um minuto para se acolher, respirar e sentir sua própria beleza.',
+      'Você é o tipo de pessoa que ilumina qualquer ambiente só com o seu jeito.',
+      'A sua coragem me inspira e o seu coração me conquista todos os dias.',
+      'Seja doce consigo mesma, porque o seu amor próprio merece tanto cuidado quanto o amor que você dá.',
+      'Eu sigo te admirando por cada detalhe, por cada gesto e por cada sorriso.',
+      'Hoje, escolha se cuidar, se presentear e se lembrar de quanto você é amada.',
+      'Quando o mundo parecer pesado, lembre-se de que você tem um amor verdadeiro te acompanhando.',
+      'O melhor conselho de hoje é continuar acreditando no seu valor e no seu brilho.',
+      'Eu quero te ver feliz, leve e cercada de tudo o que te faz bem.',
+      'A sua beleza interna é exatamente o que mais me faz te admirar.',
+      'Você é um lembrete vivo de que o amor pode ser doce, forte e verdadeiro.',
+      'Não se esqueça de se permitir ser amada, porque você merece isso e muito mais.',
+      'Hoje é um bom dia para sorrir mais, respirar fundo e lembrar que você é única.'
+    ];
+
+    function getNotificationPhrase() {
+      return notificationPhrases[Math.floor(Math.random() * notificationPhrases.length)];
     }
 
-    function getNextNotificationTime(now) {
-      const candidates = [8, 20].map(hour => {
-        const candidate = new Date(now);
-        candidate.setHours(hour, 0, 0, 0);
-        if (candidate <= now) {
-          candidate.setDate(candidate.getDate() + 1);
-        }
-        return candidate;
-      });
-      return candidates.sort((a, b) => a - b)[0];
-    }
-
+    const NOTIFICATION_INTERVAL_MS = 5 * 60 * 60 * 1000;
     let notificationTimer = null;
 
-    function scheduleDailyNotifications() {
+    function schedulePeriodicNotifications() {
       if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) !== 'true') {
         return;
       }
@@ -1929,21 +2171,25 @@
         clearTimeout(notificationTimer);
       }
       const now = new Date();
-      const nextTime = getNextNotificationTime(now);
-      const delay = nextTime.getTime() - now.getTime();
+      const lastSentRaw = localStorage.getItem(NOTIFICATION_LAST_SENT_KEY);
+      const lastSent = lastSentRaw ? new Date(lastSentRaw) : null;
+      const nextTime = lastSent && lastSent > now
+        ? new Date(lastSent.getTime() + NOTIFICATION_INTERVAL_MS)
+        : new Date(now.getTime() + NOTIFICATION_INTERVAL_MS);
+      const delay = Math.max(1000, nextTime.getTime() - now.getTime());
       notificationTimer = setTimeout(() => {
-        triggerDailyNotification();
-        scheduleDailyNotifications();
-      }, Math.max(1000, delay));
+        triggerPeriodicNotification();
+        schedulePeriodicNotifications();
+      }, delay);
     }
 
-    async function triggerDailyNotification() {
+    async function triggerPeriodicNotification() {
       const now = new Date();
-      const isMorning = now.getHours() < 12;
-      const title = isMorning ? 'Bom dia, meu amor' : 'Boa noite, meu amor';
-      const body = getDailyMessage(isMorning);
+      const title = 'Mensagem de carinho';
+      const body = getNotificationPhrase();
       const options = { body, icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"%3E%3Ccircle cx="60" cy="60" r="60" fill="%23ff4d6d"/%3E%3Ctext x="50%25" y="55%25" fill="%23fff" font-size="72" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" dominant-baseline="middle"%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E' };
       localStorage.setItem(NOTIFICATION_LAST_SENT_KEY, now.toISOString());
+      showNotificationToast(body);
       if (Notification.permission === 'granted') {
         if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
           try {
@@ -1965,15 +2211,15 @@
       }
       if (Notification.permission === 'granted') {
         localStorage.setItem(NOTIFICATION_ENABLED_KEY, 'true');
-        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
-        scheduleDailyNotifications();
+        updateNotificationStatus('🔔 Lembretes ativos: a cada 5 horas');
+        schedulePeriodicNotifications();
         return;
       }
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         localStorage.setItem(NOTIFICATION_ENABLED_KEY, 'true');
-        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
-        scheduleDailyNotifications();
+        updateNotificationStatus('🔔 Lembretes ativos: a cada 5 horas');
+        schedulePeriodicNotifications();
       } else {
         updateNotificationStatus('🔔 Permissão negada.');
       }
@@ -2060,15 +2306,22 @@
 
     function updateRelationshipCounter() {
       const now = new Date();
-      const diffMs = now - relationshipStart;
-      const totalMinutes = Math.floor(diffMs / 60000);
+      const start = new Date(relationshipStart);
+      const diffMs = now - start;
+      if (diffMs < 0) {
+        return;
+      }
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const totalMinutes = Math.floor(totalSeconds / 60);
       const days = Math.floor(totalMinutes / 1440);
       const hours = Math.floor((totalMinutes % 1440) / 60);
       const minutes = totalMinutes % 60;
+      const seconds = totalSeconds % 60;
 
       if (daysCounter) daysCounter.textContent = days.toString();
-      if (hoursCounter) hoursCounter.textContent = hours.toString();
-      if (minutesCounter) minutesCounter.textContent = minutes.toString();
+      if (hoursCounter) hoursCounter.textContent = hours.toString().padStart(2, '0');
+      if (minutesCounter) minutesCounter.textContent = minutes.toString().padStart(2, '0');
+      if (secondsCounter) secondsCounter.textContent = seconds.toString().padStart(2, '0');
     }
 
     function createDefaultMusicDataUrl() {
@@ -2204,6 +2457,8 @@
         photos: photosScreen,
         videos: videosScreen,
         birthday: birthdayScreen,
+        sweetMessages: sweetMessagesScreen,
+        specialMessages: specialMessagesScreen,
         music: musicScreen,
         diary: diaryScreen
       };
@@ -2225,6 +2480,10 @@
       } else if (screenName === 'birthday') {
         statusLine.textContent = 'Uma mensagem especial para você, Vida. 🎂';
         startBirthdayCelebration();
+      } else if (screenName === 'sweetMessages') {
+        statusLine.textContent = 'Sua mensagem doce agora tem uma tela própria.';
+      } else if (screenName === 'specialMessages') {
+        statusLine.textContent = 'Sua mensagem safada agora tem uma tela própria.';
       } else if (screenName === 'music') {
         statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
       } else if (screenName === 'diary') {
@@ -2333,8 +2592,8 @@
       }
       applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
       if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) === 'true') {
-        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
-        scheduleDailyNotifications();
+        updateNotificationStatus('🔔 Lembretes ativos: a cada 5 horas');
+        schedulePeriodicNotifications();
       }
       updateRelationshipCounter();
       updateScrollTopButton();
