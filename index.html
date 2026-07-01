@@ -475,6 +475,62 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
     }
 
+    .welcome-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(6, 3, 7, 0.92);
+    }
+
+    .welcome-popup.open {
+      display: flex;
+    }
+
+    .welcome-card {
+      width: min(100%, 520px);
+      padding: 28px 24px;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(18, 8, 15, 0.98);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+      text-align: center;
+      color: #fff;
+      line-height: 1.7;
+    }
+
+    .welcome-card h2 {
+      margin: 0 0 16px;
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
+      color: #ffd8e4;
+    }
+
+    .welcome-card p {
+      margin: 0 0 14px;
+      color: #f6e0e9;
+      font-size: 1rem;
+    }
+
+    .welcome-card ul {
+      margin: 18px 0 22px;
+      padding-left: 20px;
+      text-align: left;
+      color: #ffe7f1;
+    }
+
+    .welcome-card li {
+      margin-bottom: 10px;
+    }
+
+    .welcome-close {
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
     .photo-viewer-close {
       position: absolute;
       top: 16px;
@@ -588,6 +644,7 @@
         <button class="button" id="exportHistoryButton" type="button">💾 Exportar histórico</button>
         <button class="button" id="photosButton" type="button">📸 Fotos</button>
         <button class="button" id="videosButton" type="button">🎬 Vídeos</button>
+        <button class="button" id="birthdayButton" type="button">🎂 Feliz Aniversário</button>
         <button class="button" id="newMessageButton" type="button">💌 Mensagem Doce</button>
         <button class="button" id="specialMessageButton" type="button">🔥 Mensagens Safadas</button>
       </div>
@@ -603,6 +660,21 @@
       <div id="videosSection" class="hidden">
         <h2 class="section-title">Seus Vídeos</h2>
         <div class="video-list" id="videoList"></div>
+      </div>
+
+      <div id="birthdaySection" class="hidden">
+        <h2 class="section-title">Mensagem Especial</h2>
+        <div class="message-card" style="opacity: 1; transform: translateY(0) scale(1); background: linear-gradient(135deg, rgba(255, 192, 203, 0.2), rgba(255, 77, 109, 0.12)); border: 2px solid rgba(255, 77, 109, 0.4);">
+          <p style="font-size: 1.1rem; margin: 0;">
+            Vida, hoje é um dia mágico porque você nasceu para iluminar o mundo. 💫
+          </p>
+          <p style="font-size: 1rem; margin: 16px 0 0 0; opacity: 0.95;">
+            Você merece um ano repleto de alegria, saúde, sorrisos sinceros e todos os sonhos realizados. Que cada dia seja tão especial quanto você é para mim.
+          </p>
+          <p style="font-size: 1rem; margin: 14px 0 0 0; opacity: 0.92;">
+            Obrigado por existir, por me amar e por tornar minha vida infinitamente mais bonita. Feliz aniversário, meu amor. 🎂✨
+          </p>
+        </div>
       </div>
 
       <div id="musicSection" class="hidden">
@@ -622,6 +694,20 @@
     <img id="photoViewerImage" alt="Imagem em tela cheia">
   </div>
 
+  <div class="welcome-popup" id="welcomePopup" aria-hidden="true">
+    <div class="welcome-card">
+      <h2>Parabéns, Cláudia!</h2>
+      <p>Bem-vinda ao seu cantinho especial, feito com muito amor só para você.</p>
+      <p>Aqui você pode guardar e reviver nossos maiores momentos com fotos, vídeos, músicas e mensagens.</p>
+      <ul>
+        <li>Use o botão <strong>Importar lembranças</strong> para adicionar fotos, vídeos ou músicas.</li>
+        <li>A música padrão já está pronta para tocar, ou você pode escolher suas próprias canções.</li>
+        <li>Toque em <strong>Mensagem Doce</strong> para receber carinho, ou em <strong>Mensagens Safadas</strong> para momentos quentes.</li>
+      </ul>
+      <button class="button welcome-close" id="welcomeClose" type="button">Entendi, amor</button>
+    </div>
+  </div>
+
   <script>
     const MAX_PHOTOS = 63;
     const photoGallery = document.getElementById('photoGallery');
@@ -631,10 +717,12 @@
     const audioPlayer = document.getElementById('audioPlayer');
     const photosSection = document.getElementById('photosSection');
     const videosSection = document.getElementById('videosSection');
+    const birthdaySection = document.getElementById('birthdaySection');
     const musicSection = document.getElementById('musicSection');
     const importInput = document.getElementById('importInput');
     const photosButton = document.getElementById('photosButton');
     const videosButton = document.getElementById('videosButton');
+    const birthdayButton = document.getElementById('birthdayButton');
     const musicButton = document.getElementById('musicButton');
     const appShell = document.getElementById('appShell');
     const accessLock = document.getElementById('accessLock');
@@ -686,12 +774,15 @@
     const backupInput = document.getElementById('backupInput');
     const exportHistoryButton = document.getElementById('exportHistoryButton');
     const specialMessageButton = document.getElementById('specialMessageButton');
+    const welcomePopup = document.getElementById('welcomePopup');
+    const welcomeClose = document.getElementById('welcomeClose');
     const daysCounter = document.getElementById('daysCounter');
     const hoursCounter = document.getElementById('hoursCounter');
     const minutesCounter = document.getElementById('minutesCounter');
     const relationshipStart = new Date('2024-05-23T00:00:00');
     const ACCESS_CODE = '110223';
     const ACCESS_LOCK_KEY = 'claudia-app-unlocked';
+    const WELCOME_POPUP_KEY = 'claudia-welcome-seen';
     const DB_NAME = 'claudia-archive';
     const DB_VERSION = 1;
     const STORE_NAME = 'files';
@@ -744,7 +835,6 @@
       event.preventDefault();
       const typedCode = accessInput.value.trim();
       if (typedCode === ACCESS_CODE) {
-        localStorage.setItem(ACCESS_LOCK_KEY, 'true');
         accessLock.classList.add('hidden');
         appShell.classList.remove('hidden');
         accessError.textContent = '';
@@ -755,11 +845,13 @@
         accessInput.value = '';
       }
     });
+    welcomeClose.addEventListener('click', hideWelcomePopup);
     photoViewerClose.addEventListener('click', closePhotoViewer);
     photoViewer.addEventListener('click', closePhotoViewer);
     photoViewerImage.addEventListener('click', event => event.stopPropagation());
     photosButton.addEventListener('click', () => showSection('photos'));
     videosButton.addEventListener('click', () => showSection('videos'));
+    birthdayButton.addEventListener('click', () => showSection('birthday'));
     musicButton.addEventListener('click', () => showSection('music'));
     newMessageButton.addEventListener('click', showRandomMessage);
     specialMessageButton.addEventListener('click', showSpecialMessage);
@@ -918,6 +1010,21 @@
         messageText.textContent = nextMessage;
         messageCard.classList.add('visible');
       }, 80);
+    }
+
+    function showWelcomePopup() {
+      if (!welcomePopup) return;
+      welcomePopup.classList.add('open');
+      welcomePopup.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function hideWelcomePopup() {
+      if (!welcomePopup) return;
+      welcomePopup.classList.remove('open');
+      welcomePopup.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      localStorage.setItem(WELCOME_POPUP_KEY, 'true');
     }
 
     function downloadJSON(filename, data) {
@@ -1108,11 +1215,14 @@
     function showSection(section) {
       photosSection.classList.toggle('hidden', section !== 'photos');
       videosSection.classList.toggle('hidden', section !== 'videos');
+      birthdaySection.classList.toggle('hidden', section !== 'birthday');
       musicSection.classList.toggle('hidden', section !== 'music');
       if (section === 'photos' && photos.length) {
         statusLine.textContent = `Mostrando ${photos.length} foto(s).`;
       } else if (section === 'videos' && videos.length) {
         statusLine.textContent = `Mostrando ${videos.length} vídeo(s).`;
+      } else if (section === 'birthday') {
+        statusLine.textContent = 'Uma mensagem especial para você, Vida. 🎂';
       } else if (section === 'music') {
         statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
       }
@@ -1135,6 +1245,9 @@
       renderVideos();
       renderMusic();
       showRandomMessage();
+      if (!localStorage.getItem(WELCOME_POPUP_KEY)) {
+        showWelcomePopup();
+      }
       updateRelationshipCounter();
       setInterval(updateRelationshipCounter, 60000);
 
@@ -1146,14 +1259,8 @@
     }
 
     window.addEventListener('load', () => {
-      if (localStorage.getItem(ACCESS_LOCK_KEY) === 'true') {
-        accessLock.classList.add('hidden');
-        appShell.classList.remove('hidden');
-        initializeApp();
-      } else {
-        accessLock.classList.remove('hidden');
-        appShell.classList.add('hidden');
-      }
+      accessLock.classList.remove('hidden');
+      appShell.classList.add('hidden');
     });
   </script>
 </body>
