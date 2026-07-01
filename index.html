@@ -77,9 +77,30 @@
     body.light-mode .counter-card,
     body.light-mode .music-panel,
     body.light-mode .access-card,
-    body.light-mode .welcome-card {
+    body.light-mode .welcome-card,
+    body.light-mode .notification-card {
       background: var(--surface);
       color: var(--text-main);
+      border-color: rgba(255, 77, 109, 0.16);
+    }
+
+    body.light-mode .hero-message,
+    body.light-mode .subtitle,
+    body.light-mode .status-line,
+    body.light-mode .section-title,
+    body.light-mode .track-item,
+    body.light-mode .track-item button,
+    body.light-mode .access-card p,
+    body.light-mode .access-card input,
+    body.light-mode .access-card h2,
+    body.light-mode .welcome-card p,
+    body.light-mode .welcome-card li {
+      color: var(--text-main);
+    }
+
+    body.light-mode .track-item button,
+    body.light-mode .access-card input {
+      background: rgba(255, 216, 228, 0.7);
       border-color: rgba(255, 77, 109, 0.16);
     }
 
@@ -129,10 +150,20 @@
       background: linear-gradient(145deg, rgba(24, 10, 19, 0.05), rgba(12, 6, 12, 0.04));
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 32px;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       overflow: hidden;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      isolation: isolate;
+    }
+
+    .app-shell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 35%, rgba(255, 255, 255, 0.04) 70%, transparent);
+      z-index: -1;
     }
 
     header {
@@ -239,6 +270,7 @@
     }
 
     .button, .file-button {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -256,6 +288,8 @@
       cursor: pointer;
       text-decoration: none;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      overflow: hidden;
+      isolation: isolate;
     }
 
     .button:hover, .file-button:hover {
@@ -478,6 +512,29 @@
       color: #f0c7d7;
       text-align: center;
       min-height: 1.3em;
+    }
+
+    .notification-card {
+      margin: 0 auto 16px;
+      max-width: 760px;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      text-align: center;
+      display: grid;
+      gap: 10px;
+    }
+
+    .notification-pill {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      color: #ffe4eb;
+      font-weight: 700;
     }
 
     .app-shell.hidden {
@@ -914,6 +971,11 @@
         <button class="button" id="specialMessageButton" type="button">🔥 Mensagens Safadas</button>
       </div>
 
+      <div class="notification-card" id="notificationCard">
+        <div class="notification-pill" id="notificationStatus">🔔 Lembretes diários: desativados</div>
+        <button class="button" id="notificationsButton" type="button">🔔 Ativar mensagens da manhã e da noite</button>
+      </div>
+
       <button class="button" id="musicButton" type="button">🎵 Música</button>
       <div class="status-line" id="statusLine">Toque em importar para começar.</div>
 
@@ -1047,6 +1109,8 @@
     const themeToggle = document.getElementById('themeToggle');
     const scrollTopButton = document.getElementById('scrollTopButton');
     const celebrationLayer = document.getElementById('celebrationLayer');
+    const notificationsButton = document.getElementById('notificationsButton');
+    const notificationStatus = document.getElementById('notificationStatus');
     const daysCounter = document.getElementById('daysCounter');
     const hoursCounter = document.getElementById('hoursCounter');
     const minutesCounter = document.getElementById('minutesCounter');
@@ -1056,6 +1120,8 @@
     const WELCOME_POPUP_KEY = 'claudia-welcome-seen';
     const BG_PHOTO_KEY = 'claudia-bg-photo';
     const THEME_KEY = 'claudia-theme';
+    const NOTIFICATION_ENABLED_KEY = 'claudia-notifications-enabled';
+    const NOTIFICATION_LAST_SENT_KEY = 'claudia-notifications-last-sent';
     const DB_NAME = 'claudia-archive';
     const DB_VERSION = 1;
     const STORE_NAME = 'files';
@@ -1105,8 +1171,14 @@
     backupInput.addEventListener('change', handleBackupImport);
     exportHistoryButton.addEventListener('click', exportHistory);
     themeToggle.addEventListener('click', toggleTheme);
+    notificationsButton.addEventListener('click', enableDailyNotifications);
     scrollTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     window.addEventListener('scroll', updateScrollTopButton);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        scheduleDailyNotifications();
+      }
+    });
     accessForm.addEventListener('submit', event => {
       event.preventDefault();
       const typedCode = accessInput.value.trim();
@@ -1336,6 +1408,97 @@
     function updateScrollTopButton() {
       if (!scrollTopButton) return;
       scrollTopButton.classList.toggle('hidden', window.scrollY < 320);
+    }
+
+    function updateNotificationStatus(text) {
+      if (notificationStatus) {
+        notificationStatus.textContent = text;
+      }
+    }
+
+    function getDailyMessage(isMorning) {
+      const pool = isMorning ? [
+        'Bom dia, meu amor. Eu estou pensando em você e desejando que o seu dia seja cheio de carinho e paz.',
+        'Bom dia, vida. Quero que você saiba que o meu amor está com você desde o primeiro instante do seu dia.',
+        'Bom dia, meu amor. Você merece um dia lindo, leve e cheio de sorrisos.'
+      ] : [
+        'Boa noite, meu amor. Eu queria te abraçar agora e te dizer que você é o meu maior carinho.',
+        'Boa noite, princesa. Que o seu descanso seja leve e que o seu coração descanse em paz.',
+        'Boa noite, meu amor. Você é a minha calma, o meu carinho e a minha melhor lembrança do dia.'
+      ];
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function getNextNotificationTime(now) {
+      const candidates = [8, 20].map(hour => {
+        const candidate = new Date(now);
+        candidate.setHours(hour, 0, 0, 0);
+        if (candidate <= now) {
+          candidate.setDate(candidate.getDate() + 1);
+        }
+        return candidate;
+      });
+      return candidates.sort((a, b) => a - b)[0];
+    }
+
+    let notificationTimer = null;
+
+    function scheduleDailyNotifications() {
+      if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) !== 'true') {
+        return;
+      }
+      if (notificationTimer) {
+        clearTimeout(notificationTimer);
+      }
+      const now = new Date();
+      const nextTime = getNextNotificationTime(now);
+      const delay = nextTime.getTime() - now.getTime();
+      notificationTimer = setTimeout(() => {
+        triggerDailyNotification();
+        scheduleDailyNotifications();
+      }, Math.max(1000, delay));
+    }
+
+    async function triggerDailyNotification() {
+      const now = new Date();
+      const isMorning = now.getHours() < 12;
+      const title = isMorning ? 'Bom dia, meu amor' : 'Boa noite, meu amor';
+      const body = getDailyMessage(isMorning);
+      const options = { body, icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"%3E%3Ccircle cx="60" cy="60" r="60" fill="%23ff4d6d"/%3E%3Ctext x="50%25" y="55%25" fill="%23fff" font-size="72" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" dominant-baseline="middle"%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E' };
+      localStorage.setItem(NOTIFICATION_LAST_SENT_KEY, now.toISOString());
+      if (Notification.permission === 'granted') {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+          try {
+            const registration = await navigator.serviceWorker.ready;
+            await registration.showNotification(title, options);
+          } catch (error) {
+            new Notification(title, options);
+          }
+        } else {
+          new Notification(title, options);
+        }
+      }
+    }
+
+    async function enableDailyNotifications() {
+      if (!('Notification' in window)) {
+        updateNotificationStatus('🔔 Seu navegador não suporta notificações.');
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        localStorage.setItem(NOTIFICATION_ENABLED_KEY, 'true');
+        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
+        scheduleDailyNotifications();
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        localStorage.setItem(NOTIFICATION_ENABLED_KEY, 'true');
+        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
+        scheduleDailyNotifications();
+      } else {
+        updateNotificationStatus('🔔 Permissão negada.');
+      }
     }
 
     function startBirthdayCelebration() {
@@ -1597,6 +1760,10 @@
         applyBackgroundPhoto(savedBg);
       }
       applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+      if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) === 'true') {
+        updateNotificationStatus('🔔 Lembretes ativos: manhã e noite');
+        scheduleDailyNotifications();
+      }
       updateRelationshipCounter();
       updateScrollTopButton();
       setInterval(updateRelationshipCounter, 60000);
