@@ -6,7 +6,10 @@
   <meta name="theme-color" content="#ff4d6d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="application-name" content="Only For You">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23ff4d6d'/%3E%3Cpath d='M64 30c-10-12-28-10-36 4-8 14-2 32 12 44l24 20 24-20c14-12 20-30 12-44-8-14-26-16-36-4z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23ff4d6d'/%3E%3Cpath d='M64 30c-10-12-28-10-36 4-8 14-2 32 12 44l24 20 24-20c14-12 20-30 12-44-8-14-26-16-36-4z' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23ff4d6d'/%3E%3Ctext x='50%25' y='55%25' fill='%23fff' font-size='72' font-family='Arial, Helvetica, sans-serif' text-anchor='middle' dominant-baseline='middle'%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E">
   <title>Only For You ❤️</title>
   <style>
@@ -218,6 +221,25 @@
       -webkit-backdrop-filter: blur(16px);
       text-align: center;
       color: #ffe8ef;
+    }
+
+    .app-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 77, 109, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 26px rgba(255, 77, 109, 0.2);
+    }
+
+    .counter-caption {
+      margin: 6px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      color: #ffdce7;
     }
 
     .counter-grid {
@@ -925,11 +947,24 @@
           <circle cx="140" cy="160" r="2.5" fill="url(#logoGradient)" opacity="0.6" />
         </svg>
       </div>
+      <div class="app-icon" aria-label="Ícone do aplicativo">
+        <svg width="44" height="44" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#appIconGradient)"/>
+          <path d="M64 33C54 23 38 25 32 39C26 53 31 70 47 82L64 94L81 82C97 70 102 53 96 39C90 25 74 23 64 33Z" fill="white"/>
+          <defs>
+            <linearGradient id="appIconGradient" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#ff7aa2"/>
+              <stop offset="1" stop-color="#ff4d6d"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
       <h1>Cláudia ❤️</h1>
       <p class="subtitle">Um presente digital feito com carinho para você.</p>
       <div class="date-chip">Nosso amor começou em 23/05/2024</div>
       <div class="counter-card" aria-live="polite">
         <strong>Tempo do nosso amor</strong>
+        <p class="counter-caption">Contando cada hora, minuto e dia juntos.</p>
         <div class="counter-grid">
           <div class="counter-item">
             <div class="counter-value" id="daysCounter">0</div>
@@ -1766,7 +1801,7 @@
       }
       updateRelationshipCounter();
       updateScrollTopButton();
-      setInterval(updateRelationshipCounter, 60000);
+      setInterval(updateRelationshipCounter, 1000);
 
       if ('serviceWorker' in navigator && location.protocol !== 'file:') {
         navigator.serviceWorker.register('service-worker.js').catch(() => {
