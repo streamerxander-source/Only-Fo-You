@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ff4d6d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='60' fill='%23ff4d6d'/%3E%3Ctext x='50%25' y='55%25' fill='%23fff' font-size='72' font-family='Arial, Helvetica, sans-serif' text-anchor='middle' dominant-baseline='middle'%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E">
+  <title>Only For You ❤️</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: 'Segoe UI', 'SF Pro Display', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #060307;
+      color: #fef7fa;
+      --pink: #ff4d6d;
+      --pink-soft: #ff7a96;
+      --rose: #ffd8e4;
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-strong: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 16px;
+      background:
+        radial-gradient(circle at top left, rgba(255, 77, 109, 0.24), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 146, 174, 0.16), transparent 32%),
+        linear-gradient(140deg, #070308 0%, #120713 45%, #1b0d18 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      opacity: 0.45;
+      z-index: 0;
+      animation: drift 11s ease-in-out infinite alternate;
+    }
+
+    body::before {
+      top: -90px;
+      left: -100px;
+      background: rgba(255, 77, 109, 0.24);
+    }
+
+    body::after {
+      bottom: -120px;
+      right: -90px;
+      background: rgba(255, 190, 209, 0.18);
+      animation-duration: 13s;
+      animation-direction: alternate-reverse;
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 940px);
+      background: linear-gradient(145deg, rgba(24, 10, 19, 0.95), rgba(12, 6, 12, 0.92));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 32px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    header {
+      padding: 28px 22px 16px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2.3rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #fff5f8 0%, #ffd5e2 35%, #ff8ea8 70%, #ff4d6d 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 8px 28px rgba(255, 77, 109, 0.12);
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.98rem;
+      color: #f7dce7;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .date-chip {
+      display: inline-flex;
+      margin: 16px auto 0;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 77, 109, 0.16);
+      border: 1px solid rgba(255, 77, 109, 0.24);
+      color: #ffe6ee;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .counter-card {
+      margin: 16px auto 0;
+      padding: 16px 18px;
+      max-width: 760px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 77, 109, 0.08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 30px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      text-align: center;
+      color: #ffe8ef;
+    }
+
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .counter-item {
+      padding: 12px 8px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .counter-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .counter-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .content {
+      padding: 6px 18px 24px;
+    }
+
+    .hero-message {
+      margin: 0 auto 18px;
+      max-width: 760px;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #f5dfe7;
+      text-align: center;
+      opacity: 0.94;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+      margin-bottom: 14px;
+    }
+
+    .button, .file-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--pink), var(--pink-soft));
+      box-shadow: 0 14px 28px rgba(255, 77, 109, 0.2);
+      font-size: 0.97rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover, .file-button:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 18px 34px rgba(255, 77, 109, 0.26);
+      background: linear-gradient(135deg, #ff5b76, #ff8ea8);
+    }
+
+    .button:active, .file-button:active {
+      transform: translateY(0) scale(0.99);
+    }
+
+    .file-button {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-button::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.2) 50%, transparent 80%);
+      transform: translateX(-120%);
+      transition: transform 0.45s ease;
+    }
+
+    .file-button:hover::after {
+      transform: translateX(120%);
+    }
+
+    input[type=file] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .section-title {
+      margin: 18px 0 12px;
+      font-size: 0.9rem;
+      letter-spacing: 0.16em;
+      color: #ffb7c8;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .gallery, .video-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .gallery {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .photo-card, .video-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      background: var(--glass);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      animation: fadeInUp 0.45s ease both;
+    }
+
+    .photo-card:hover, .video-card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.24);
+    }
+
+    .photo-card img, .video-card video {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .music-panel {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 22px;
+      color: #f6e7f1;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .music-panel p {
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .message-card {
+      margin: 0 auto 18px;
+      max-width: 760px;
+      padding: 18px 16px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 77, 109, 0.08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 30px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      text-align: center;
+      color: #ffe8ef;
+      font-size: 1rem;
+      line-height: 1.8;
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+      transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.3s ease;
+    }
+
+    .message-card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 16px 40px rgba(255, 77, 109, 0.12);
+    }
+
+    .track-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .track-item {
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .track-item span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .track-item button {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: transparent;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .track-item button:hover {
+      background: rgba(255, 77, 109, 0.18);
+      transform: translateY(-1px);
+    }
+
+    .status-line {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      color: #f0c7d7;
+      text-align: center;
+      min-height: 1.3em;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      to {
+        transform: translate3d(20px, 18px, 0) scale(1.08);
+      }
+    }
+
+    @media (min-width: 700px) {
+      body {
+        padding: 24px;
+      }
+
+      .content {
+        padding: 6px 24px 28px;
+      }
+
+      .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .controls .file-button {
+        grid-column: span 2;
+      }
+
+      .message-card {
+        padding: 22px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell" role="application">
+    <header>
+      <h1>Cláudia ❤️</h1>
+      <p class="subtitle">Um presente digital feito com carinho para você.</p>
+      <div class="date-chip">Nosso amor começou em 23/05/2024</div>
+      <div class="counter-card" aria-live="polite">
+        <strong>Tempo do nosso amor</strong>
+        <div class="counter-grid">
+          <div class="counter-item">
+            <div class="counter-value" id="daysCounter">0</div>
+            <div class="counter-label">Dias</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-value" id="hoursCounter">0</div>
+            <div class="counter-label">Horas</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-value" id="minutesCounter">0</div>
+            <div class="counter-label">Minutos</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <p class="hero-message">Este espaço guarda momentos especiais: fotos, vídeos, música e palavras que tocam o coração. Importe arquivos do seu dispositivo e deixe a surpresa tomar forma.</p>
+
+      <div class="message-card" id="messageCard">
+        <p id="messageText">Carregando uma mensagem doce para a Cláudia...</p>
+      </div>
+
+      <div class="controls">
+        <label class="file-button button">
+          📁 Importar lembranças
+          <input id="importInput" type="file" accept="image/*,video/*,audio/*" multiple>
+        </label>
+        <label class="file-button button">
+          📥 Importar histórico
+          <input id="backupInput" type="file" accept="application/json">
+        </label>
+        <button class="button" id="exportHistoryButton" type="button">💾 Exportar histórico</button>
+        <button class="button" id="photosButton" type="button">📸 Fotos</button>
+        <button class="button" id="videosButton" type="button">🎬 Vídeos</button>
+        <button class="button" id="newMessageButton" type="button">💌 Mensagem Doce</button>
+        <button class="button" id="specialMessageButton" type="button">🔥 Mensagens Safadas</button>
+      </div>
+
+      <button class="button" id="musicButton" type="button">🎵 Música</button>
+      <div class="status-line" id="statusLine">Toque em importar para começar.</div>
+
+      <div id="photosSection" class="hidden">
+        <h2 class="section-title">Galeria de Fotos</h2>
+        <div class="gallery" id="photoGallery"></div>
+      </div>
+
+      <div id="videosSection" class="hidden">
+        <h2 class="section-title">Seus Vídeos</h2>
+        <div class="video-list" id="videoList"></div>
+      </div>
+
+      <div id="musicSection" class="hidden">
+        <h2 class="section-title">Música para a Cláudia</h2>
+        <div class="music-panel">
+          <p>Você pode tocar uma música importada ou ouvir a melodia padrão desse presente.</p>
+          <audio id="audioPlayer" controls preload="none"></audio>
+          <div class="track-list" id="trackList"></div>
+          <p style="opacity:.88; font-size:.95rem;">Dica: importe uma música para deixar tudo ainda mais pessoal.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const MAX_PHOTOS = 63;
+    const photoGallery = document.getElementById('photoGallery');
+    const videoList = document.getElementById('videoList');
+    const trackList = document.getElementById('trackList');
+    const statusLine = document.getElementById('statusLine');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const photosSection = document.getElementById('photosSection');
+    const videosSection = document.getElementById('videosSection');
+    const musicSection = document.getElementById('musicSection');
+    const importInput = document.getElementById('importInput');
+    const photosButton = document.getElementById('photosButton');
+    const videosButton = document.getElementById('videosButton');
+    const musicButton = document.getElementById('musicButton');
+
+    const photos = [];
+    const videos = [];
+    const audios = [];
+    const messages = [
+      'Cláudia, cada momento ao seu lado transforma dias simples em eternas poesias.',
+      'Meu coração sorri quando penso no seu jeito doce e no seu abraço acolhedor.',
+      'O brilho dos seus olhos é a luz que guia meus sonhos mais profundos.',
+      'Sua presença enche meu mundo de carinho, ternura e esperança.',
+      'A sua voz é a melodia mais bonita que meu coração já ouviu.',
+      'Neste presente, guardo um pedaço do amor que sinto por você a cada instante.',
+      'Você é a inspiração dos dias mais românticos que já vivi.',
+      'Quero ser o motivo dos seus sorrisos e o apoio dos seus momentos de paz.',
+      'Cada lembrança com você é uma flor delicada plantada na minha alma.',
+      'Sinto que o nosso amor cresce em silêncio, mas fala alto no peito.',
+      'Sou grato por ter você na minha vida e por poder cuidar do seu coração.',
+      'Espero que estas palavras aqueçam você do mesmo jeito que o seu amor aquece a mim.',
+      'Quando penso em você, vejo um futuro cheio de abraços e carinhos sinceros.',
+      'Você é o meu lugar seguro, o meu abrigo de ternura e paixão.',
+      'Seu sorriso é o meu presente favorito, e eu quero vê-lo todos os dias.',
+      'Carrego seu nome no pensamento e um poema de amor no coração.',
+      'Com você, cada instante se torna inesquecível e cheio de significado.',
+      'A felicidade que sinto ao seu lado é a mais pura forma de amor.',
+      'Seu abraço é a certeza de que o mundo pode ser suave e belo.',
+      'Cláudia, você é a razão dos meus melhores sentimentos e das minhas melhores lembranças.',
+      'Adoro quando sua pele encontra a minha e cada toque vira promessa.',
+      'Pensar nas suas curvas e no seu beijo faz meu coração disparar de desejo.',
+      'Quero te lembrar no calor da noite e nos sussurros que só a gente entende.',
+      'Quando estamos juntos, tudo fica mais intenso, doce e irresistível.'
+    ];
+    const defaultMusicUrl = createDefaultMusicDataUrl();
+    const messageCard = document.getElementById('messageCard');
+    const messageText = document.getElementById('messageText');
+    const newMessageButton = document.getElementById('newMessageButton');
+    const backupInput = document.getElementById('backupInput');
+    const exportHistoryButton = document.getElementById('exportHistoryButton');
+    const specialMessageButton = document.getElementById('specialMessageButton');
+    const daysCounter = document.getElementById('daysCounter');
+    const hoursCounter = document.getElementById('hoursCounter');
+    const minutesCounter = document.getElementById('minutesCounter');
+    const relationshipStart = new Date('2024-05-23T00:00:00');
+    const DB_NAME = 'claudia-archive';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'files';
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        if (!('indexedDB' in window)) {
+          reject(new Error('IndexedDB não disponível'));
+          return;
+        }
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = event => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function saveFileRecord(record) {
+      return openDatabase().then(db => new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.put(record);
+        request.onsuccess = () => resolve(record);
+        request.onerror = () => reject(request.error);
+      }));
+    }
+
+    function loadStoredFiles() {
+      return openDatabase().then(db => new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAll();
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+      })).catch(() => []);
+    }
+
+    audioPlayer.src = defaultMusicUrl;
+    audioPlayer.setAttribute('aria-label', 'Player de música romântica');
+
+    importInput.addEventListener('change', handleImport);
+    backupInput.addEventListener('change', handleBackupImport);
+    exportHistoryButton.addEventListener('click', exportHistory);
+    photosButton.addEventListener('click', () => showSection('photos'));
+    videosButton.addEventListener('click', () => showSection('videos'));
+    musicButton.addEventListener('click', () => showSection('music'));
+    newMessageButton.addEventListener('click', showRandomMessage);
+    specialMessageButton.addEventListener('click', showSpecialMessage);
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getFileKind(file) {
+      const type = (file.type || '').toLowerCase();
+      if (type.startsWith('image/')) return 'image';
+      if (type.startsWith('video/')) return 'video';
+      if (type.startsWith('audio/')) return 'audio';
+
+      const name = (file.name || '').toLowerCase();
+      if (/\.png$|\.jpg$|\.jpeg$|\.gif$|\.webp$|\.bmp$/.test(name)) return 'image';
+      if (/\.mp4$|\.mov$|\.webm$|\.ogg$|\.m4v$/.test(name)) return 'video';
+      if (/\.mp3$|\.wav$|\.m4a$|\.aac$|\.ogg$/.test(name)) return 'audio';
+      return null;
+    }
+
+    async function handleImport(event) {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) {
+        return;
+      }
+
+      let newPhotos = 0;
+      let newVideos = 0;
+      let newAudios = 0;
+      let ignoredPhotos = 0;
+
+      const importPromises = files.map(async file => {
+        const kind = getFileKind(file);
+        try {
+          if (kind === 'image') {
+            if (photos.length < MAX_PHOTOS) {
+              const dataUrl = await readFileAsDataUrl(file);
+              const record = {
+                id: `image-${Date.now()}-${Math.random()}`,
+                type: 'image',
+                name: file.name || `Foto ${photos.length + 1}`,
+                dataUrl,
+                createdAt: Date.now()
+              };
+              photos.push(record);
+              await saveFileRecord(record);
+              newPhotos += 1;
+            } else {
+              ignoredPhotos += 1;
+            }
+          } else if (kind === 'video') {
+            const dataUrl = await readFileAsDataUrl(file);
+            const record = {
+              id: `video-${Date.now()}-${Math.random()}`,
+              type: 'video',
+              name: file.name || `Vídeo ${videos.length + 1}`,
+              dataUrl,
+              createdAt: Date.now()
+            };
+            videos.push(record);
+            await saveFileRecord(record);
+            newVideos += 1;
+          } else if (kind === 'audio') {
+            const dataUrl = await readFileAsDataUrl(file);
+            const record = {
+              id: `audio-${Date.now()}-${Math.random()}`,
+              type: 'audio',
+              name: file.name || `Música ${audios.length + 1}`,
+              dataUrl,
+              createdAt: Date.now()
+            };
+            audios.push(record);
+            await saveFileRecord(record);
+            newAudios += 1;
+          }
+        } catch (err) {
+          console.warn('Erro ao ler arquivo:', file.name, err);
+        }
+      });
+
+      await Promise.all(importPromises);
+
+      let message = `Importação concluída com sucesso! ${newPhotos} foto(s), ${newVideos} vídeo(s)`;
+      if (newAudios) {
+        message += ` e ${newAudios} música(s)`;
+      }
+      if (ignoredPhotos) {
+        message += `, ${ignoredPhotos} foto(s) extras não foram adicionadas para manter o app leve.`;
+      }
+      statusLine.textContent = message;
+
+      renderPhotos();
+      renderVideos();
+      renderMusic();
+      showSection('photos');
+      importInput.value = '';
+    }
+
+    const specialMessages = [
+      'Quero sentir sua pele quente grudada na minha e cada suspiro seu pertinho do meu ouvido.',
+      'Quando imagino você no escuro, meu corpo inteiro arrepia e pede mais do seu beijo.',
+      'Vamos transformar essa saudade em uma noite de prazer só nossa, com carinho e desejo.',
+      'Te desejo como ninguém, sentindo cada curva do seu corpo e cada gemido sussurrado.',
+      'Minha vontade é te envolver na cama, explorar cada ponto e fazer você se perder no prazer.',
+      'Seu corpo me chama, seus olhos me provocam e tudo o que quero é te acariciar lentamente.',
+      'Eu adoro jujitar contigo'
+    ];
+
+    function showRandomMessage() {
+      const nextMessage = messages[Math.floor(Math.random() * messages.length)];
+      if (!messageCard || !messageText) return;
+      messageCard.classList.remove('visible');
+      setTimeout(() => {
+        messageText.textContent = nextMessage;
+        messageCard.classList.add('visible');
+      }, 80);
+    }
+
+    function showSpecialMessage() {
+      const nextMessage = specialMessages[Math.floor(Math.random() * specialMessages.length)];
+      if (!messageCard || !messageText) return;
+      messageCard.classList.remove('visible');
+      setTimeout(() => {
+        messageText.textContent = nextMessage;
+        messageCard.classList.add('visible');
+      }, 80);
+    }
+
+    function downloadJSON(filename, data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    async function exportHistory() {
+      let records = await loadStoredFiles();
+      if (!records.length) {
+        records = [...photos, ...videos, ...audios];
+      }
+      if (!records.length) {
+        statusLine.textContent = 'Nenhum histórico encontrado para exportar.';
+        return;
+      }
+      downloadJSON('claudia-historico.json', records);
+      statusLine.textContent = 'Histórico exportado com imagens, vídeos e músicas. Envie o arquivo para o outro dispositivo.';
+    }
+
+    async function handleBackupImport(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      event.target.value = '';
+      try {
+        const text = await file.text();
+        const records = JSON.parse(text);
+        await importBackupRecords(records);
+        statusLine.textContent = 'Histórico importado com sucesso.';
+      } catch (err) {
+        console.warn('Erro ao importar histórico:', err);
+        statusLine.textContent = 'Falha ao importar histórico. Use um arquivo JSON válido.';
+      }
+    }
+
+    async function importBackupRecords(records) {
+      if (!Array.isArray(records)) {
+        throw new Error('Formato de backup inválido');
+      }
+      const normalized = records.filter(record => record && record.id && record.type && record.dataUrl);
+      await Promise.all(normalized.map(record => saveFileRecord(record)));
+      const storedFiles = await loadStoredFiles();
+      photos.length = 0;
+      videos.length = 0;
+      audios.length = 0;
+      storedFiles.sort((a, b) => a.createdAt - b.createdAt);
+      storedFiles.forEach(record => {
+        if (record.type === 'image') photos.push(record);
+        if (record.type === 'video') videos.push(record);
+        if (record.type === 'audio') audios.push(record);
+      });
+      renderPhotos();
+      renderVideos();
+      renderMusic();
+    }
+
+    function updateRelationshipCounter() {
+      const now = new Date();
+      const diffMs = now - relationshipStart;
+      const totalMinutes = Math.floor(diffMs / 60000);
+      const days = Math.floor(totalMinutes / 1440);
+      const hours = Math.floor((totalMinutes % 1440) / 60);
+      const minutes = totalMinutes % 60;
+
+      if (daysCounter) daysCounter.textContent = days.toString();
+      if (hoursCounter) hoursCounter.textContent = hours.toString();
+      if (minutesCounter) minutesCounter.textContent = minutes.toString();
+    }
+
+    function createDefaultMusicDataUrl() {
+      try {
+        const sampleRate = 22050;
+        const length = sampleRate * 4;
+        const buffer = new ArrayBuffer(44 + length * 2);
+        const view = new DataView(buffer);
+        function writeString(offset, text) {
+          for (let i = 0; i < text.length; i += 1) {
+            view.setUint8(offset + i, text.charCodeAt(i));
+          }
+        }
+        writeString(0, 'RIFF');
+        view.setUint32(4, 36 + length * 2, true);
+        writeString(8, 'WAVE');
+        writeString(12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeString(36, 'data');
+        view.setUint32(40, length * 2, true);
+
+        for (let i = 0; i < length; i += 1) {
+          const t = i / sampleRate;
+          const frequency = 220 + 55 * Math.sin(t * 1.5);
+          const envelope = Math.max(0, 1 - t / 4);
+          const sample = Math.sin(2 * Math.PI * frequency * t) * envelope * 0.16;
+          view.setInt16(44 + i * 2, sample * 0x7fff, true);
+        }
+
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        bytes.forEach(byte => {
+          binary += String.fromCharCode(byte);
+        });
+        const base64 = btoa(binary);
+        return `data:audio/wav;base64,${base64}`;
+      } catch (error) {
+        console.warn('Erro ao gerar música padrão:', error);
+        return '';
+      }
+    }
+
+    function renderPhotos() {
+      photoGallery.innerHTML = '';
+      if (!photos.length) {
+        photoGallery.innerHTML = '<p style="opacity:.82; text-align:center; grid-column:1/-1;">Nenhuma foto importada ainda. Use o botão acima para carregar suas lembranças.</p>';
+        return;
+      }
+      photos.forEach((photo, index) => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.innerHTML = `<img src="${photo.dataUrl}" alt="${photo.name}">`;
+        photoGallery.appendChild(card);
+      });
+    }
+
+    function renderVideos() {
+      videoList.innerHTML = '';
+      if (!videos.length) {
+        videoList.innerHTML = '<p style="opacity:.82; text-align:center; grid-column:1/-1;">Nenhum vídeo importado ainda. Escolha um vídeo especial para assistir aqui.</p>';
+        return;
+      }
+      videos.forEach((videoItem, index) => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        const video = document.createElement('video');
+        video.src = videoItem.dataUrl;
+        video.controls = true;
+        video.preload = 'metadata';
+        video.setAttribute('aria-label', videoItem.name);
+        card.appendChild(video);
+        videoList.appendChild(card);
+      });
+    }
+
+    function renderMusic() {
+      trackList.innerHTML = '';
+      if (!audios.length) {
+        trackList.innerHTML = '<p style="opacity:.82; text-align:center;">Nenhuma música importada. A melodia padrão irá tocar quando você abri-la.</p>';
+        audioPlayer.src = defaultMusicUrl;
+        return;
+      }
+
+      audioPlayer.src = audios[audios.length - 1].dataUrl;
+      audios.forEach((track, index) => {
+        const trackItem = document.createElement('div');
+        trackItem.className = 'track-item';
+        const name = document.createElement('span');
+        name.textContent = track.name;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = 'Tocar';
+        button.addEventListener('click', () => {
+          audioPlayer.src = track.dataUrl;
+          audioPlayer.play().catch(() => {});
+          statusLine.textContent = `Tocando: ${track.name}`;
+        });
+        trackItem.appendChild(name);
+        trackItem.appendChild(button);
+        trackList.appendChild(trackItem);
+      });
+    }
+
+    function showSection(section) {
+      photosSection.classList.toggle('hidden', section !== 'photos');
+      videosSection.classList.toggle('hidden', section !== 'videos');
+      musicSection.classList.toggle('hidden', section !== 'music');
+      if (section === 'photos' && photos.length) {
+        statusLine.textContent = `Mostrando ${photos.length} foto(s).`;
+      } else if (section === 'videos' && videos.length) {
+        statusLine.textContent = `Mostrando ${videos.length} vídeo(s).`;
+      } else if (section === 'music') {
+        statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
+      }
+    }
+
+    window.addEventListener('load', async () => {
+      const storedFiles = await loadStoredFiles();
+      storedFiles.sort((a, b) => a.createdAt - b.createdAt);
+      storedFiles.forEach(record => {
+        if (record.type === 'image') {
+          photos.push(record);
+        } else if (record.type === 'video') {
+          videos.push(record);
+        } else if (record.type === 'audio') {
+          audios.push(record);
+        }
+      });
+
+      renderPhotos();
+      renderVideos();
+      renderMusic();
+      showRandomMessage();
+      updateRelationshipCounter();
+      setInterval(updateRelationshipCounter, 60000);
+
+      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {
+          console.warn('Falha ao registrar service worker.');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
