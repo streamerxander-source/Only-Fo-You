@@ -588,7 +588,21 @@
       cursor: pointer;
     }
 
-    @keyframes fadeInUp {
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo svg {
+      filter: drop-shadow(0 4px 12px rgba(255, 77, 109, 0.2));
+      animation: fadeInDown 0.7s ease both;
+    }
+
+    @keyframes fadeInDown {
       from {
         opacity: 0;
         transform: translateY(8px);
@@ -646,6 +660,29 @@
 
   <main class="app-shell hidden" role="application" id="appShell">
     <header>
+      <div class="logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Heart background -->
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#ff7a96;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ff4d6d;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          
+          <!-- Heart shape -->
+          <path d="M100,170 C30,120 10,80 10,55 C10,30 30,15 50,15 C65,15 80,25 100,40 C120,25 135,15 150,15 C170,15 190,30 190,55 C190,80 170,120 100,170 Z" fill="url(#logoGradient)" opacity="0.15" />
+          
+          <!-- Letter L -->
+          <text x="55" y="125" font-family="'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#fff5f8" text-anchor="middle" dominant-baseline="middle">L</text>
+          
+          <!-- Letter C -->
+          <text x="135" y="125" font-family="'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#ffd8e4" text-anchor="middle" dominant-baseline="middle">C</text>
+          
+          <!-- Small heart between letters -->
+          <path d="M100,95 C98,92 95,90 92,90 C89,90 87,92 85,95 L100,108 L115,95 C113,92 111,90 108,90 C105,90 102,92 100,95 Z" fill="#ff4d6d" />
+        </svg>
+      </div>
       <h1>Cláudia ❤️</h1>
       <p class="subtitle">Um presente digital feito com carinho para você.</p>
       <div class="date-chip">Nosso amor começou em 23/05/2024</div>
