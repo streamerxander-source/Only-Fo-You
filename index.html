@@ -32,10 +32,9 @@
       min-height: 100vh;
       margin: 0;
       padding: 16px;
-      background:
-        radial-gradient(circle at top left, rgba(255, 77, 109, 0.24), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(255, 146, 174, 0.16), transparent 32%),
-        linear-gradient(140deg, #070308 0%, #120713 45%, #1b0d18 100%);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -43,7 +42,18 @@
       position: relative;
     }
 
-    body::before,
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(255, 77, 109, 0.24), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 146, 174, 0.16), transparent 32%),
+        linear-gradient(140deg, rgba(7, 3, 8, 0.92) 0%, rgba(18, 7, 19, 0.92) 45%, rgba(27, 13, 24, 0.92) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
     body::after {
       content: '';
       position: fixed;
@@ -54,7 +64,7 @@
       pointer-events: none;
       opacity: 0.45;
       z-index: 0;
-      animation: drift 11s ease-in-out infinite alternate;
+      animation: drift 13s ease-in-out infinite alternate-reverse;
     }
 
     body::before {
@@ -272,6 +282,39 @@
       -webkit-backdrop-filter: blur(12px);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
       animation: fadeInUp 0.45s ease both;
+    }
+
+    .photo-card-actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      gap: 6px;
+      padding: 8px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .photo-card:hover .photo-card-actions {
+      opacity: 1;
+    }
+
+    .photo-card-actions button {
+      flex: 1;
+      border: 0;
+      background: rgba(255, 77, 109, 0.8);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .photo-card-actions button:hover {
+      background: rgba(255, 77, 109, 1);
     }
 
     .photo-card:hover, .video-card:hover {
@@ -783,6 +826,7 @@
     const ACCESS_CODE = '110223';
     const ACCESS_LOCK_KEY = 'claudia-app-unlocked';
     const WELCOME_POPUP_KEY = 'claudia-welcome-seen';
+    const BG_PHOTO_KEY = 'claudia-bg-photo';
     const DB_NAME = 'claudia-archive';
     const DB_VERSION = 1;
     const STORE_NAME = 'files';
@@ -1027,6 +1071,16 @@
       localStorage.setItem(WELCOME_POPUP_KEY, 'true');
     }
 
+    function setBackgroundPhoto(dataUrl) {
+      localStorage.setItem(BG_PHOTO_KEY, dataUrl);
+      applyBackgroundPhoto(dataUrl);
+      statusLine.textContent = 'Fundo alterado com sucesso! 🛏️';
+    }
+
+    function applyBackgroundPhoto(dataUrl) {
+      document.body.style.backgroundImage = `url(${dataUrl})`;
+    }
+
     function downloadJSON(filename, data) {
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -1161,6 +1215,20 @@
         image.alt = photo.name;
         image.addEventListener('click', () => openPhotoViewer(photo.dataUrl, photo.name));
         card.appendChild(image);
+
+        const actions = document.createElement('div');
+        actions.className = 'photo-card-actions';
+        
+        const bgButton = document.createElement('button');
+        bgButton.textContent = '🛏️ Fundo';
+        bgButton.type = 'button';
+        bgButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setBackgroundPhoto(photo.dataUrl);
+        });
+        
+        actions.appendChild(bgButton);
+        card.appendChild(actions);
         photoGallery.appendChild(card);
       });
     }
@@ -1247,6 +1315,10 @@
       showRandomMessage();
       if (!localStorage.getItem(WELCOME_POPUP_KEY)) {
         showWelcomePopup();
+      }
+      const savedBg = localStorage.getItem(BG_PHOTO_KEY);
+      if (savedBg) {
+        applyBackgroundPhoto(savedBg);
       }
       updateRelationshipCounter();
       setInterval(updateRelationshipCounter, 60000);
