@@ -18,16 +18,17 @@
       font-family: 'Segoe UI', 'SF Pro Display', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: #060307;
       color: #fef7fa;
-      --pink: #ff4d6d;
-      --pink-soft: #ff7a96;
-      --rose: #ffd8e4;
-      --glass: rgba(255, 255, 255, 0.08);
-      --glass-strong: rgba(255, 255, 255, 0.12);
-      --line: rgba(255, 255, 255, 0.14);
-      --text-main: #fef7fa;
-      --text-muted: #f7dce7;
-      --surface: rgba(18, 8, 15, 0.96);
-      --surface-2: rgba(255, 255, 255, 0.09);
+      --pink: #ff5c7a;
+      --pink-soft: #ff95aa;
+      --rose: #ffe7ee;
+      --glass: rgba(255, 255, 255, 0.1);
+      --glass-strong: rgba(255, 255, 255, 0.16);
+      --line: rgba(255, 255, 255, 0.16);
+      --text-main: #fdf7fa;
+      --text-muted: #f2dce5;
+      --surface: rgba(18, 10, 15, 0.9);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.2);
     }
 
     * {
@@ -49,6 +50,8 @@
       position: relative;
       color: var(--text-main);
       transition: background 0.35s ease, color 0.35s ease;
+      font-weight: 500;
+      letter-spacing: -0.01em;
     }
 
     body.light-mode {
@@ -112,9 +115,9 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(circle at top left, rgba(255, 77, 109, 0.24), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(255, 146, 174, 0.16), transparent 32%),
-        linear-gradient(140deg, rgba(7, 3, 8, 0.92) 0%, rgba(18, 7, 19, 0.92) 45%, rgba(27, 13, 24, 0.92) 100%);
+        radial-gradient(circle at top left, rgba(255, 92, 122, 0.2), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 149, 170, 0.16), transparent 34%),
+        linear-gradient(140deg, rgba(8, 5, 10, 0.96) 0%, rgba(20, 10, 17, 0.95) 45%, rgba(26, 13, 24, 0.95) 100%);
       pointer-events: none;
       z-index: 0;
     }
@@ -150,10 +153,10 @@
       position: relative;
       z-index: 1;
       width: min(100%, 940px);
-      background: linear-gradient(145deg, rgba(24, 10, 19, 0.05), rgba(12, 6, 12, 0.04));
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 32px;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       overflow: hidden;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -180,7 +183,7 @@
       font-weight: 800;
       letter-spacing: 0.02em;
       line-height: 1.1;
-      background: linear-gradient(90deg, #fff5f8 0%, #ffd5e2 35%, #ff8ea8 70%, #ff4d6d 100%);
+      background: linear-gradient(90deg, #fff7fa 0%, #ffe2ea 35%, #ff96aa 70%, #ff5c7a 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -201,9 +204,9 @@
       margin: 16px auto 0;
       padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(255, 77, 109, 0.16);
-      border: 1px solid rgba(255, 77, 109, 0.24);
-      color: #ffe6ee;
+      background: rgba(255, 92, 122, 0.16);
+      border: 1px solid rgba(255, 92, 122, 0.24);
+      color: #ffe8ef;
       font-weight: 700;
       letter-spacing: 0.03em;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -215,8 +218,8 @@
       max-width: 760px;
       border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 77, 109, 0.08));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 30px rgba(0, 0, 0, 0.18);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 92, 122, 0.08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 14px 34px rgba(0, 0, 0, 0.16);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       text-align: center;
@@ -274,6 +277,220 @@
       padding: 6px 18px 24px;
     }
 
+    .screen {
+      display: none;
+      animation: screenRise 0.32s ease both;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .screen-hero {
+      margin: 0 0 16px;
+      padding: 20px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,92,122,0.1));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .eyebrow {
+      margin: 0 0 6px;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #ffb3c0;
+      font-weight: 700;
+    }
+
+    .screen-title {
+      margin: 0;
+      font-size: 1.35rem;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .screen-copy {
+      margin: 8px 0 0;
+      color: #f0cdd8;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+
+    .home-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 16px 0 14px;
+    }
+
+    .home-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 16px;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,92,122,0.06));
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.16);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .home-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+    }
+
+    .home-card-icon {
+      font-size: 1.25rem;
+    }
+
+    .home-card-title {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .home-card-text {
+      font-size: 0.86rem;
+      color: #f0d4de;
+      line-height: 1.45;
+    }
+
+    .screen-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 16px;
+    }
+
+    .screen-back {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .screen-header .screen-title {
+      font-size: 1.2rem;
+    }
+
+    .screen-header .screen-copy {
+      margin-top: 2px;
+      font-size: 0.9rem;
+    }
+
+    .tab-bar {
+      position: sticky;
+      bottom: 12px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      padding: 10px;
+      margin: 14px 0 0;
+      border-radius: 999px;
+      background: rgba(11,7,10,0.82);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .tab-button {
+      border: 0;
+      border-radius: 999px;
+      min-height: 44px;
+      background: transparent;
+      color: #f6dfe7;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--pink), var(--pink-soft));
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .diary-editor {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .diary-editor textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      resize: vertical;
+      font: inherit;
+      line-height: 1.6;
+    }
+
+    .diary-editor textarea::placeholder {
+      color: #f4dce4;
+    }
+
+    .diary-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .diary-entry {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .diary-entry p {
+      margin: 0 0 8px;
+      line-height: 1.7;
+      color: #ffe8ef;
+    }
+
+    .diary-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: #f2d2db;
+    }
+
+    .diary-delete {
+      border: 0;
+      background: transparent;
+      color: #ff9fb0;
+      cursor: pointer;
+      font-weight: 700;
+      padding: 0;
+    }
+
+    .empty-state {
+      padding: 16px;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px dashed rgba(255,255,255,0.16);
+      color: #f2dce5;
+      line-height: 1.7;
+    }
+
     .hero-message {
       margin: 0 auto 18px;
       max-width: 760px;
@@ -291,6 +508,18 @@
       margin-bottom: 14px;
     }
 
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 4px 0 14px;
+    }
+
+    .quick-actions .button {
+      min-height: 46px;
+      padding: 12px 14px;
+    }
+
     .button, .file-button {
       position: relative;
       display: inline-flex;
@@ -304,7 +533,7 @@
       border-radius: 999px;
       color: #fff;
       background: linear-gradient(135deg, var(--pink), var(--pink-soft));
-      box-shadow: 0 14px 28px rgba(255, 77, 109, 0.2);
+      box-shadow: 0 10px 24px rgba(255, 92, 122, 0.2);
       font-size: 0.97rem;
       font-weight: 700;
       cursor: pointer;
@@ -316,8 +545,8 @@
 
     .button:hover, .file-button:hover {
       transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 18px 34px rgba(255, 77, 109, 0.26);
-      background: linear-gradient(135deg, #ff5b76, #ff8ea8);
+      box-shadow: 0 14px 28px rgba(255, 92, 122, 0.24);
+      background: linear-gradient(135deg, #ff6882, #ff9fb0);
     }
 
     .button::before, .file-button::before {
@@ -386,10 +615,10 @@
     .photo-card, .video-card {
       position: relative;
       overflow: hidden;
-      border-radius: 22px;
+      border-radius: 24px;
       background: var(--glass);
       border: 1px solid var(--line);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -467,26 +696,73 @@
     .message-card {
       margin: 0 auto 18px;
       max-width: 760px;
-      padding: 18px 16px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 77, 109, 0.08));
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 30px rgba(0, 0, 0, 0.18);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      text-align: center;
+      padding: 16px 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 92, 122, 0.12));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 14px 34px rgba(0, 0, 0, 0.16);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      text-align: left;
       color: #ffe8ef;
-      font-size: 1rem;
-      line-height: 1.8;
+      font-size: 0.96rem;
+      line-height: 1.7;
       opacity: 0;
       transform: translateY(10px) scale(0.98);
       transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-card::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, #fff, #ff8aa5);
+      border-radius: 999px;
     }
 
     .message-card.visible {
       opacity: 1;
       transform: translateY(0) scale(1);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 16px 40px rgba(255, 77, 109, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 42px rgba(255, 92, 122, 0.12);
+    }
+
+    .notification-toast {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      max-width: min(92vw, 360px);
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(15, 10, 13, 0.94);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+      z-index: 1400;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .notification-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .notification-toast .toast-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+    }
+
+    .notification-toast .toast-text {
+      font-size: 0.94rem;
+      line-height: 1.5;
     }
 
     .track-list {
@@ -543,7 +819,7 @@
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.14);
       background: rgba(255, 255, 255, 0.06);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 24px rgba(0, 0, 0, 0.12);
       text-align: center;
       display: grid;
       gap: 10px;
@@ -584,7 +860,7 @@
       border-radius: 24px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       background: rgba(18, 8, 15, 0.96);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
       text-align: center;
     }
 
@@ -983,49 +1259,102 @@
     </header>
 
     <section class="content">
-      <p class="hero-message">Este espaço guarda momentos especiais: fotos, vídeos, música e palavras que tocam o coração. Importe arquivos do seu dispositivo e deixe a surpresa tomar forma.</p>
+      <div id="homeScreen" class="screen active">
+        <div class="screen-hero">
+          <p class="eyebrow">Seu cantinho</p>
+          <h2 class="screen-title">Para você, meu amor</h2>
+          <p class="screen-copy">Cada espaço aqui é uma pequena tela especial, como um app elegante feito só para te acompanhar.</p>
+        </div>
 
-      <div class="message-card" id="messageCard">
-        <p id="messageText">Carregando uma mensagem doce para a Cláudia...</p>
+        <p class="hero-message">Este espaço guarda momentos especiais: fotos, vídeos, música e palavras que tocam o coração. Importe arquivos do seu dispositivo e deixe a surpresa tomar forma.</p>
+
+        <div class="message-card" id="messageCard">
+          <p id="messageText">Carregando uma mensagem doce para a Cláudia...</p>
+        </div>
+
+      <div class="notification-toast" id="notificationToast" aria-live="polite">
+        <span class="toast-icon">💌</span>
+        <span class="toast-text" id="notificationToastText">Uma nova mensagem chegou.</span>
+      </div>
+          <button class="button" id="toggleMusicButton" type="button">⏯️ Música</button>
+        </div>
+
+        <div class="home-grid">
+          <button class="home-card" id="photosButton" type="button" data-screen="photos">
+            <span class="home-card-icon">📸</span>
+            <span class="home-card-title">Lembranças</span>
+            <span class="home-card-text">Guarde fotos e escolha o fundo do seu cantinho.</span>
+          </button>
+          <button class="home-card" id="videosButton" type="button" data-screen="videos">
+            <span class="home-card-icon">🎬</span>
+            <span class="home-card-title">Vídeos</span>
+            <span class="home-card-text">Reviva momentos especiais em um espaço próprio.</span>
+          </button>
+          <button class="home-card" id="birthdayButton" type="button" data-screen="birthday">
+            <span class="home-card-icon">🎂</span>
+            <span class="home-card-title">Aniversário</span>
+            <span class="home-card-text">Uma mensagem especial para iluminar o seu dia.</span>
+          </button>
+          <button class="home-card" id="diaryButton" type="button" data-screen="diary">
+            <span class="home-card-icon">📝</span>
+            <span class="home-card-title">Diário</span>
+            <span class="home-card-text">Expresse seus sentimentos com carinho e privacidade.</span>
+          </button>
+        </div>
+
+        <div class="controls">
+          <label class="file-button button">
+            📁 Importar lembranças
+            <input id="importInput" type="file" accept="image/*,video/*,audio/*" multiple>
+          </label>
+          <label class="file-button button">
+            📥 Importar histórico
+            <input id="backupInput" type="file" accept="application/json">
+          </label>
+          <button class="button" id="exportHistoryButton" type="button">💾 Exportar histórico</button>
+          <button class="button" id="newMessageButton" type="button">💌 Mensagem Doce</button>
+          <button class="button" id="specialMessageButton" type="button">🔥 Mensagens Safadas</button>
+          <button class="button" id="musicButton" type="button" data-screen="music">🎵 Música</button>
+        </div>
+
+        <div class="notification-card" id="notificationCard">
+          <div class="notification-pill" id="notificationStatus">🔔 Lembretes diários: desativados</div>
+          <button class="button" id="notificationsButton" type="button">🔔 Ativar mensagens da manhã e da noite</button>
+        </div>
+
+        <div class="status-line" id="statusLine">Toque em importar para começar.</div>
       </div>
 
-      <div class="controls">
-        <label class="file-button button">
-          📁 Importar lembranças
-          <input id="importInput" type="file" accept="image/*,video/*,audio/*" multiple>
-        </label>
-        <label class="file-button button">
-          📥 Importar histórico
-          <input id="backupInput" type="file" accept="application/json">
-        </label>
-        <button class="button" id="exportHistoryButton" type="button">💾 Exportar histórico</button>
-        <button class="button" id="photosButton" type="button">📸 Fotos</button>
-        <button class="button" id="videosButton" type="button">🎬 Vídeos</button>
-        <button class="button" id="birthdayButton" type="button">🎂 Feliz Aniversário</button>
-        <button class="button" id="newMessageButton" type="button">💌 Mensagem Doce</button>
-        <button class="button" id="specialMessageButton" type="button">🔥 Mensagens Safadas</button>
-      </div>
-
-      <div class="notification-card" id="notificationCard">
-        <div class="notification-pill" id="notificationStatus">🔔 Lembretes diários: desativados</div>
-        <button class="button" id="notificationsButton" type="button">🔔 Ativar mensagens da manhã e da noite</button>
-      </div>
-
-      <button class="button" id="musicButton" type="button">🎵 Música</button>
-      <div class="status-line" id="statusLine">Toque em importar para começar.</div>
-
-      <div id="photosSection" class="hidden">
-        <h2 class="section-title">Galeria de Fotos</h2>
+      <div id="photosScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Galeria de Lembranças</h2>
+            <p class="screen-copy">Cada foto guarda um pedaço do nosso amor.</p>
+          </div>
+        </div>
         <div class="gallery" id="photoGallery"></div>
       </div>
 
-      <div id="videosSection" class="hidden">
-        <h2 class="section-title">Seus Vídeos</h2>
+      <div id="videosScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Seus Vídeos</h2>
+            <p class="screen-copy">Momentos que você pode reviver sempre.</p>
+          </div>
+        </div>
         <div class="video-list" id="videoList"></div>
       </div>
 
-      <div id="birthdaySection" class="hidden">
-        <h2 class="section-title">Mensagem Especial</h2>
+      <div id="birthdayScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Mensagem Especial</h2>
+            <p class="screen-copy">Um carinho feito com todo o amor.</p>
+          </div>
+        </div>
         <div class="message-card" style="opacity: 1; transform: translateY(0) scale(1); background: linear-gradient(135deg, rgba(255, 192, 203, 0.2), rgba(255, 77, 109, 0.12)); border: 2px solid rgba(255, 77, 109, 0.4);">
           <p style="font-size: 1.1rem; margin: 0;">
             Vida, hoje é um dia mágico porque você nasceu para iluminar o mundo. 💫
@@ -1039,8 +1368,14 @@
         </div>
       </div>
 
-      <div id="musicSection" class="hidden">
-        <h2 class="section-title">Música para a Cláudia</h2>
+      <div id="musicScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Música para a Cláudia</h2>
+            <p class="screen-copy">Uma playlist íntima só para o seu coração.</p>
+          </div>
+        </div>
         <div class="music-panel">
           <p>Você pode tocar uma música importada ou ouvir a melodia padrão desse presente.</p>
           <audio id="audioPlayer" controls preload="none"></audio>
@@ -1048,7 +1383,30 @@
           <p style="opacity:.88; font-size:.95rem;">Dica: importe uma música para deixar tudo ainda mais pessoal.</p>
         </div>
       </div>
+
+      <div id="diaryScreen" class="screen">
+        <div class="screen-header">
+          <button class="screen-back" type="button" data-screen="home" aria-label="Voltar">←</button>
+          <div>
+            <h2 class="screen-title">Diário íntimo</h2>
+            <p class="screen-copy">Escreva seus sentimentos, pensamentos e momentos especiais.</p>
+          </div>
+        </div>
+        <div class="diary-editor">
+          <textarea id="diaryInput" placeholder="Escreva algo bonito para o seu diário..."></textarea>
+          <button class="button" id="diarySaveButton" type="button">💗 Salvar no diário</button>
+        </div>
+        <div class="diary-list" id="diaryEntries"></div>
+      </div>
     </section>
+
+    <div class="tab-bar" aria-label="Navegação principal">
+      <button class="tab-button active" type="button" data-screen="home">🏠</button>
+      <button class="tab-button" type="button" data-screen="photos">📸</button>
+      <button class="tab-button" type="button" data-screen="videos">🎬</button>
+      <button class="tab-button" type="button" data-screen="music">🎵</button>
+      <button class="tab-button" type="button" data-screen="diary">📝</button>
+    </div>
   </main>
 
   <div class="photo-viewer" id="photoViewer" aria-hidden="true">
@@ -1080,10 +1438,12 @@
     const trackList = document.getElementById('trackList');
     const statusLine = document.getElementById('statusLine');
     const audioPlayer = document.getElementById('audioPlayer');
-    const photosSection = document.getElementById('photosSection');
-    const videosSection = document.getElementById('videosSection');
-    const birthdaySection = document.getElementById('birthdaySection');
-    const musicSection = document.getElementById('musicSection');
+    const homeScreen = document.getElementById('homeScreen');
+    const photosScreen = document.getElementById('photosScreen');
+    const videosScreen = document.getElementById('videosScreen');
+    const birthdayScreen = document.getElementById('birthdayScreen');
+    const musicScreen = document.getElementById('musicScreen');
+    const diaryScreen = document.getElementById('diaryScreen');
     const importInput = document.getElementById('importInput');
     const photosButton = document.getElementById('photosButton');
     const videosButton = document.getElementById('videosButton');
@@ -1135,7 +1495,14 @@
     const defaultMusicUrl = createDefaultMusicDataUrl();
     const messageCard = document.getElementById('messageCard');
     const messageText = document.getElementById('messageText');
+    const notificationToast = document.getElementById('notificationToast');
+    const notificationToastText = document.getElementById('notificationToastText');
     const newMessageButton = document.getElementById('newMessageButton');
+    const copyMessageButton = document.getElementById('copyMessageButton');
+    const toggleMusicButton = document.getElementById('toggleMusicButton');
+    const diaryInput = document.getElementById('diaryInput');
+    const diarySaveButton = document.getElementById('diarySaveButton');
+    const diaryEntries = document.getElementById('diaryEntries');
     const backupInput = document.getElementById('backupInput');
     const exportHistoryButton = document.getElementById('exportHistoryButton');
     const specialMessageButton = document.getElementById('specialMessageButton');
@@ -1232,12 +1599,30 @@
     photoViewerClose.addEventListener('click', closePhotoViewer);
     photoViewer.addEventListener('click', closePhotoViewer);
     photoViewerImage.addEventListener('click', event => event.stopPropagation());
-    photosButton.addEventListener('click', () => showSection('photos'));
-    videosButton.addEventListener('click', () => showSection('videos'));
-    birthdayButton.addEventListener('click', () => showSection('birthday'));
-    musicButton.addEventListener('click', () => showSection('music'));
+    photosButton.addEventListener('click', () => showScreen('photos'));
+    videosButton.addEventListener('click', () => showScreen('videos'));
+    birthdayButton.addEventListener('click', () => showScreen('birthday'));
+    musicButton.addEventListener('click', () => showScreen('music'));
+    diaryButton.addEventListener('click', () => showScreen('diary'));
+    document.querySelectorAll('.screen-back').forEach(button => {
+      button.addEventListener('click', () => showScreen(button.dataset.screen || 'home'));
+    });
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => showScreen(button.dataset.screen || 'home'));
+    });
+    diarySaveButton.addEventListener('click', saveDiaryEntry);
+    diaryInput.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        saveDiaryEntry();
+      }
+    });
     newMessageButton.addEventListener('click', showRandomMessage);
     specialMessageButton.addEventListener('click', showSpecialMessage);
+    copyMessageButton.addEventListener('click', copyCurrentMessage);
+    toggleMusicButton.addEventListener('click', toggleMusicPlayback);
+    audioPlayer.addEventListener('play', updateMusicButtonText);
+    audioPlayer.addEventListener('pause', updateMusicButtonText);
+    audioPlayer.addEventListener('ended', updateMusicButtonText);
 
     function readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
@@ -1339,7 +1724,7 @@
       renderPhotos();
       renderVideos();
       renderMusic();
-      showSection('photos');
+      showScreen('photos');
       importInput.value = '';
     }
 
@@ -1379,6 +1764,62 @@
       document.body.style.overflow = '';
     }
 
+    async function copyCurrentMessage() {
+      const text = messageText?.textContent?.trim();
+      if (!text) return;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = text;
+          tempInput.setAttribute('readonly', '');
+          tempInput.style.position = 'fixed';
+          tempInput.style.left = '-9999px';
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+        }
+        statusLine.textContent = 'Mensagem copiada para a área de transferência.';
+      } catch (error) {
+        console.warn('Não foi possível copiar a mensagem:', error);
+        statusLine.textContent = 'Não foi possível copiar a mensagem.';
+      }
+    }
+
+    function updateMusicButtonText() {
+      if (!toggleMusicButton) return;
+      toggleMusicButton.textContent = audioPlayer && !audioPlayer.paused ? '⏸️ Pausar música' : '▶️ Tocar música';
+    }
+
+    function toggleMusicPlayback() {
+      if (!audioPlayer) return;
+      if (audioPlayer.paused) {
+        const playback = audioPlayer.play();
+        if (playback && playback.catch) {
+          playback.catch(() => {
+            statusLine.textContent = 'Não foi possível iniciar a reprodução agora.';
+          });
+        }
+        statusLine.textContent = audios.length ? `Reproduzindo: ${audios[audios.length - 1].name}` : 'Reproduzindo a melodia padrão.';
+      } else {
+        audioPlayer.pause();
+        statusLine.textContent = 'Música pausada.';
+      }
+      updateMusicButtonText();
+    }
+
+    function showNotificationToast(message) {
+      if (!notificationToast || !notificationToastText) return;
+      notificationToastText.textContent = message;
+      notificationToast.classList.add('show');
+      clearTimeout(showNotificationToast.timeoutId);
+      showNotificationToast.timeoutId = setTimeout(() => {
+        notificationToast.classList.remove('show');
+      }, 3200);
+    }
+
     function showRandomMessage() {
       const nextMessage = messages[Math.floor(Math.random() * messages.length)];
       if (!messageCard || !messageText) return;
@@ -1386,6 +1827,7 @@
       setTimeout(() => {
         messageText.textContent = nextMessage;
         messageCard.classList.add('visible');
+        showNotificationToast(nextMessage);
       }, 80);
     }
 
@@ -1396,6 +1838,7 @@
       setTimeout(() => {
         messageText.textContent = nextMessage;
         messageCard.classList.add('visible');
+        showNotificationToast(nextMessage);
       }, 80);
     }
 
@@ -1730,6 +2173,7 @@
       if (!audios.length) {
         trackList.innerHTML = '<p style="opacity:.82; text-align:center;">Nenhuma música importada. A melodia padrão irá tocar quando você abri-la.</p>';
         audioPlayer.src = defaultMusicUrl;
+        updateMusicButtonText();
         return;
       }
 
@@ -1746,6 +2190,7 @@
           audioPlayer.src = track.dataUrl;
           audioPlayer.play().catch(() => {});
           statusLine.textContent = `Tocando: ${track.name}`;
+          updateMusicButtonText();
         });
         trackItem.appendChild(name);
         trackItem.appendChild(button);
@@ -1753,21 +2198,110 @@
       });
     }
 
-    function showSection(section) {
-      photosSection.classList.toggle('hidden', section !== 'photos');
-      videosSection.classList.toggle('hidden', section !== 'videos');
-      birthdaySection.classList.toggle('hidden', section !== 'birthday');
-      musicSection.classList.toggle('hidden', section !== 'music');
-      if (section === 'photos' && photos.length) {
+    function showScreen(screenName) {
+      const screens = {
+        home: homeScreen,
+        photos: photosScreen,
+        videos: videosScreen,
+        birthday: birthdayScreen,
+        music: musicScreen,
+        diary: diaryScreen
+      };
+
+      Object.entries(screens).forEach(([name, screen]) => {
+        if (screen) {
+          screen.classList.toggle('active', name === screenName);
+        }
+      });
+
+      document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.toggle('active', button.dataset.screen === screenName);
+      });
+
+      if (screenName === 'photos' && photos.length) {
         statusLine.textContent = `Mostrando ${photos.length} foto(s).`;
-      } else if (section === 'videos' && videos.length) {
+      } else if (screenName === 'videos' && videos.length) {
         statusLine.textContent = `Mostrando ${videos.length} vídeo(s).`;
-      } else if (section === 'birthday') {
+      } else if (screenName === 'birthday') {
         statusLine.textContent = 'Uma mensagem especial para você, Vida. 🎂';
         startBirthdayCelebration();
-      } else if (section === 'music') {
+      } else if (screenName === 'music') {
         statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
+      } else if (screenName === 'diary') {
+        statusLine.textContent = 'Seu diário íntimo está pronto.';
+      } else {
+        statusLine.textContent = 'Bem-vinda ao seu cantinho especial.';
       }
+    }
+
+    const DIARY_KEY = 'claudia-diary-entries';
+
+    function loadDiaryEntries() {
+      try {
+        return JSON.parse(localStorage.getItem(DIARY_KEY) || '[]');
+      } catch (error) {
+        console.warn('Erro ao ler diário:', error);
+        return [];
+      }
+    }
+
+    function saveDiaryEntries(entries) {
+      localStorage.setItem(DIARY_KEY, JSON.stringify(entries));
+    }
+
+    function renderDiaryEntries() {
+      if (!diaryEntries) return;
+      const entries = [...loadDiaryEntries()].sort((a, b) => b.createdAt - a.createdAt);
+      diaryEntries.innerHTML = '';
+      if (!entries.length) {
+        diaryEntries.innerHTML = '<div class="empty-state">Nenhuma palavra registrada ainda. Escreva algo bonito para o seu diário.</div>';
+        return;
+      }
+      entries.forEach(entry => {
+        const card = document.createElement('div');
+        card.className = 'diary-entry';
+        const text = document.createElement('p');
+        text.textContent = entry.text;
+        const meta = document.createElement('div');
+        meta.className = 'diary-meta';
+        const date = document.createElement('span');
+        date.textContent = new Date(entry.createdAt).toLocaleString('pt-BR', { dateStyle: 'medium', timeStyle: 'short' });
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.className = 'diary-delete';
+        deleteButton.textContent = 'Excluir';
+        deleteButton.addEventListener('click', () => {
+          const nextEntries = loadDiaryEntries().filter(item => item.id !== entry.id);
+          saveDiaryEntries(nextEntries);
+          renderDiaryEntries();
+          statusLine.textContent = 'Entrada removida do diário.';
+        });
+        meta.appendChild(date);
+        meta.appendChild(deleteButton);
+        card.appendChild(text);
+        card.appendChild(meta);
+        diaryEntries.appendChild(card);
+      });
+    }
+
+    function saveDiaryEntry() {
+      if (!diaryInput) return;
+      const value = diaryInput.value.trim();
+      if (!value) {
+        statusLine.textContent = 'Escreva algo para salvar no diário.';
+        return;
+      }
+      const nextEntries = loadDiaryEntries();
+      nextEntries.push({
+        id: `diary-${Date.now()}`,
+        text: value,
+        createdAt: Date.now()
+      });
+      saveDiaryEntries(nextEntries);
+      diaryInput.value = '';
+      renderDiaryEntries();
+      showScreen('diary');
+      statusLine.textContent = 'Entrada salva no diário com carinho.';
     }
 
     async function initializeApp() {
@@ -1786,7 +2320,10 @@
       renderPhotos();
       renderVideos();
       renderMusic();
+      updateMusicButtonText();
+      renderDiaryEntries();
       showRandomMessage();
+      showScreen('home');
       if (!localStorage.getItem(WELCOME_POPUP_KEY)) {
         showWelcomePopup();
       }
