@@ -85,10 +85,10 @@
       position: relative;
       z-index: 1;
       width: min(100%, 940px);
-      background: linear-gradient(145deg, rgba(24, 10, 19, 0.35), rgba(12, 6, 12, 0.32));
+      background: linear-gradient(145deg, rgba(24, 10, 19, 0.15), rgba(12, 6, 12, 0.12));
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 32px;
-      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.07);
       overflow: hidden;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -662,25 +662,46 @@
     <header>
       <div class="logo">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <!-- Heart background -->
           <defs>
             <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#ff7a96;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#ff4d6d;stop-opacity:1" />
+              <stop offset="0%" style="stop-color:#fff5f8;stop-opacity:1" />
+              <stop offset="50%" style="stop-color:#ffd8e4;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#ff7a96;stop-opacity:1" />
             </linearGradient>
+            <filter id="logoShadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.3" />
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+            </filter>
           </defs>
           
-          <!-- Heart shape -->
-          <path d="M100,170 C30,120 10,80 10,55 C10,30 30,15 50,15 C65,15 80,25 100,40 C120,25 135,15 150,15 C170,15 190,30 190,55 C190,80 170,120 100,170 Z" fill="url(#logoGradient)" opacity="0.15" />
+          <!-- Background circle with gradient -->
+          <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.4" />
           
-          <!-- Letter L -->
-          <text x="55" y="125" font-family="'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#fff5f8" text-anchor="middle" dominant-baseline="middle">L</text>
+          <!-- Decorative circles -->
+          <circle cx="100" cy="100" r="88" fill="none" stroke="url(#logoGradient)" stroke-width="1" opacity="0.2" />
           
-          <!-- Letter C -->
-          <text x="135" y="125" font-family="'Segoe UI', sans-serif" font-size="68" font-weight="800" fill="#ffd8e4" text-anchor="middle" dominant-baseline="middle">C</text>
+          <!-- Letter L with elegant styling -->
+          <g filter="url(#logoShadow)">
+            <path d="M 45 50 L 45 150 Q 45 155 50 155 L 75 155" 
+                  fill="none" stroke="url(#logoGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+          </g>
           
-          <!-- Small heart between letters -->
-          <path d="M100,95 C98,92 95,90 92,90 C89,90 87,92 85,95 L100,108 L115,95 C113,92 111,90 108,90 C105,90 102,92 100,95 Z" fill="#ff4d6d" />
+          <!-- Letter C with elegant styling -->
+          <g filter="url(#logoShadow)">
+            <path d="M 155 50 Q 145 50 145 65 L 145 135 Q 145 150 155 150 L 165 150" 
+                  fill="none" stroke="url(#logoGradient)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+          </g>
+          
+          <!-- Small heart accent in center -->
+          <g filter="url(#logoShadow)">
+            <path d="M 100 80 C 98 77 95 75 92 75 C 89 75 87 77 85 80 L 100 95 L 115 80 C 113 77 111 75 108 75 C 105 75 102 77 100 80 Z" 
+                  fill="url(#logoGradient)" opacity="0.8" />
+          </g>
+          
+          <!-- Decorative sparkles -->
+          <circle cx="60" cy="45" r="2.5" fill="url(#logoGradient)" opacity="0.6" />
+          <circle cx="140" cy="45" r="2.5" fill="url(#logoGradient)" opacity="0.6" />
+          <circle cx="140" cy="160" r="2.5" fill="url(#logoGradient)" opacity="0.6" />
         </svg>
       </div>
       <h1>Cláudia ❤️</h1>
