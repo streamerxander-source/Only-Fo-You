@@ -1,0 +1,13 @@
+{
+  "name": "only-for-you-push",
+  "version": "1.0.0",
+  "description": "Servidor local para push notifications do app Only For You",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "web-push": "^3.0.0"
+  }
+}
