@@ -65,4 +65,37 @@ app.post('/subscribe', (req, res) => {
   }
 
   const exists = subscriptions.some(item => item.endpoint === subscription.endpoint);
-  if (!exist
+  if (!exists) {
+    subscriptions.push(subscription);
+    saveSubscriptions();
+  }
+
+  res.json({ ok: true });
+});
+
+app.post('/send-push', async (req, res) => {
+  const { title, body } = req.body || {};
+  if (!title || !body) {
+    return res.status(400).json({ ok: false, error: 'Title/body obrigatórios' });
+  }
+
+  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
+    return res.status(503).json({ ok: false, error: 'Push não configurado. Defina VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY.' });
+  }
+
+  const payload = JSON.stringify({ title, body, url: '/' });
+  const results = await Promise.allSettled(
+    subscriptions.map(sub => webpush.sendNotification(sub, payload))
+  );
+
+  const failures = results.filter(result => result.status === 'rejected');
+  if (failures.length) {
+    console.warn('Falhas no push:', failures.length);
+  }
+
+  res.json({ ok: true, sent: subscriptions.length, failures: failures.length });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor de push rodando em http://0.0.0.0:${PORT}`);
+});

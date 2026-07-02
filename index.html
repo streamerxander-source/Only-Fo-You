@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="application-name" content="Only For You">
+  <meta name="push-server-url" content="">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23ff4d6d'/%3E%3Cpath d='M64 30c-10-12-28-10-36 4-8 14-2 32 12 44l24 20 24-20c14-12 20-30 12-44-8-14-26-16-36-4z' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23ff4d6d'/%3E%3Cpath d='M64 30c-10-12-28-10-36 4-8 14-2 32 12 44l24 20 24-20c14-12 20-30 12-44-8-14-26-16-36-4z' fill='%23fff'/%3E%3C/svg%3E">
@@ -2006,7 +2007,10 @@
     const NOTIFICATION_LAST_SENT_KEY = 'claudia-notifications-last-sent';
     const PUSH_SUBSCRIPTION_KEY = 'claudia-push-subscription';
     const PUSH_PUBLIC_KEY = 'BJ7gygZQeOXAalHb3-BpQXLjmxz75Uo9wPdRUNah98BvOyPrxGJ_XtF_oClgxkWTYZw3UuFXhWtc6MMghC1PNRg';
-    const PUSH_SERVER_URL = 'http://127.0.0.1:3000';
+    const PUSH_SERVER_URL = (() => {
+      const configured = document.querySelector('meta[name="push-server-url"]')?.content?.trim();
+      return configured || window.location.origin;
+    })();
     const DB_NAME = 'claudia-archive';
     const DB_VERSION = 1;
     const STORE_NAME = 'files';
