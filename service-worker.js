@@ -1,4 +1,4 @@
-const CACHE_NAME = 'claudia-heart-v4';
+const CACHE_NAME = 'claudia-heart-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -23,6 +23,11 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {
@@ -42,6 +47,21 @@ self.addEventListener('fetch', event => {
             return caches.match('./');
           }
         });
+    })
+  );
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const appUrl = self.location.origin + '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(appUrl);
     })
   );
 });

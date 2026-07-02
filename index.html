@@ -18,7 +18,7 @@
       font-family: 'Segoe UI', 'SF Pro Display', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: #060307;
       color: #fef7fa;
-      --pink: #ff5c7a;
+      --pink: #6c5cff;
       --pink-soft: #ff95aa;
       --rose: #ffe7ee;
       --glass: rgba(255, 255, 255, 0.1);
@@ -37,21 +37,22 @@
     }
 
     body {
-      min-height: 100vh;
+      min-height: 100dvh;
       margin: 0;
-      padding: 16px;
+      padding: 8px;
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: stretch;
       overflow-x: hidden;
       position: relative;
       color: var(--text-main);
       transition: background 0.35s ease, color 0.35s ease;
       font-weight: 500;
       letter-spacing: -0.01em;
+      overscroll-behavior-y: contain;
     }
 
     body.light-mode {
@@ -206,15 +207,23 @@
     .app-shell {
       position: relative;
       z-index: 1;
-      width: min(100%, 940px);
+      width: min(100%, 420px);
+      min-height: calc(100dvh - 16px);
+      display: flex;
+      flex-direction: column;
       background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 32px;
+      border-radius: 24px;
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       overflow: hidden;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       isolation: isolate;
+      transform-origin: center top;
+    }
+
+    .app-shell.app-opening {
+      animation: appLaunch 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .app-shell::before {
@@ -226,8 +235,37 @@
       z-index: -1;
     }
 
+    .ios-top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .ios-top-bar .ios-notch {
+      width: 94px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .ios-top-bar span {
+      margin-left: 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #ffe7ef;
+      opacity: 0.92;
+    }
+
     header {
-      padding: 28px 22px 16px;
+      padding: 16px 16px 10px;
       text-align: center;
     }
 
@@ -274,8 +312,8 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 92, 122, 0.08));
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 14px 34px rgba(0, 0, 0, 0.16);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       text-align: center;
       color: #ffe8ef;
     }
@@ -328,16 +366,76 @@
     }
 
     .content {
-      padding: 6px 18px 24px;
+      flex: 1;
+      padding: 6px 14px 92px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    .pull-refresh-indicator {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: -4px 0 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #ffe7ef;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transform: translateY(-40px);
+      opacity: 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .pull-refresh-indicator.active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .pull-refresh-indicator.refreshing {
+      background: rgba(255,92,122,0.18);
+    }
+
+    .pull-refresh-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .pull-refresh-indicator.refreshing .pull-refresh-icon {
+      transform: rotate(180deg);
     }
 
     .screen {
       display: none;
-      animation: screenRise 0.32s ease both;
+      opacity: 0;
+      transform: translate3d(0, 16px, 0) scale(0.985);
+      animation: screenSheetIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .screen.active {
       display: block;
+    }
+
+    .screen:not(#homeScreen) {
+      transform-origin: center bottom;
+    }
+
+    .screen.sheet-screen {
+      animation: screenSheetIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .screen-hero {
@@ -347,6 +445,8 @@
       background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,92,122,0.1));
       border: 1px solid rgba(255,255,255,0.14);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .eyebrow {
@@ -374,17 +474,18 @@
 
     .home-grid {
       display: grid;
-      gap: 12px;
+      gap: 10px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin: 16px 0 14px;
+      margin: 14px 0 12px;
     }
 
     .home-card {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
-      padding: 16px;
+      gap: 6px;
+      padding: 12px;
+      min-height: 116px;
       text-align: left;
       border: 1px solid rgba(255,255,255,0.16);
       border-radius: 22px;
@@ -392,45 +493,57 @@
       color: #fff;
       box-shadow: 0 12px 26px rgba(0,0,0,0.16);
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      animation: cardEntrance 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
     .home-card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-2px) scale(1.01);
       box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,92,122,0.1));
     }
 
     .home-card-icon {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
     }
 
     .home-card-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
     }
 
     .home-card-text {
-      font-size: 0.86rem;
+      font-size: 0.78rem;
       color: #f0d4de;
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .screen-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin: 4px 0 16px;
+      gap: 10px;
+      margin: 2px 0 12px;
     }
 
     .screen-back {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.1);
       color: #fff;
-      font-size: 1rem;
+      font-size: 1.05rem;
       cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .screen-back:hover {
+      transform: scale(1.04);
+      background: rgba(255,255,255,0.16);
     }
 
     .screen-header .screen-title {
@@ -444,35 +557,43 @@
 
     .tab-bar {
       position: sticky;
-      bottom: 12px;
+      bottom: 8px;
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      padding: 10px;
-      margin: 14px 0 0;
+      gap: 6px;
+      padding: 8px;
+      margin: 8px 8px 0;
       border-radius: 999px;
-      background: rgba(11,7,10,0.82);
+      background: rgba(11,7,10,0.9);
       border: 1px solid rgba(255,255,255,0.12);
       box-shadow: 0 14px 30px rgba(0,0,0,0.22);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 5;
     }
 
     .tab-button {
       border: 0;
       border-radius: 999px;
-      min-height: 44px;
+      min-height: 40px;
       background: transparent;
       color: #f6dfe7;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      padding: 0 4px;
+    }
+
+    .tab-button:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-1px);
     }
 
     .tab-button.active {
       background: linear-gradient(135deg, var(--pink), var(--pink-soft));
       color: #fff;
       transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(255,92,122,0.22);
     }
 
     .diary-editor {
@@ -579,10 +700,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
-      min-height: 52px;
-      padding: 14px 16px;
+      min-height: 46px;
+      padding: 12px 14px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 999px;
       color: #fff;
@@ -598,8 +719,8 @@
     }
 
     .button:hover, .file-button:hover {
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 14px 28px rgba(255, 92, 122, 0.24);
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 24px rgba(255, 92, 122, 0.24);
       background: linear-gradient(135deg, #ff6882, #ff9fb0);
     }
 
@@ -745,6 +866,47 @@
     .music-panel p {
       margin: 0;
       line-height: 1.7;
+    }
+
+    .music-player-shell {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .music-player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .music-player-controls button {
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--pink-soft));
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(255,92,122,0.2);
+    }
+
+    .music-track-pill {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #ffe7ef;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: center;
     }
 
     .message-card {
@@ -1204,12 +1366,45 @@
       }
     }
 
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
     @keyframes cardRise {
       from {
         opacity: 0;
         transform: translateY(8px) scale(0.98);
       }
       to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes screenSheetIn {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+    }
+
+    @keyframes appLaunch {
+      0% {
+        opacity: 0;
+        transform: translateY(22px) scale(0.98);
+      }
+      100% {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
@@ -1247,9 +1442,68 @@
       }
     }
 
+    @media (max-width: 375px) {
+      body {
+        padding: 6px;
+      }
+
+      .app-shell {
+        border-radius: 18px;
+        min-height: calc(100dvh - 12px);
+      }
+
+      header {
+        padding: 12px 12px 8px;
+      }
+
+      .content {
+        padding: 4px 10px 88px;
+      }
+
+      .screen-title {
+        font-size: 1.12rem;
+      }
+
+      .screen-copy {
+        font-size: 0.84rem;
+      }
+
+      .home-grid {
+        gap: 8px;
+      }
+
+      .home-card {
+        min-height: 106px;
+        padding: 10px;
+      }
+
+      .home-card-text {
+        font-size: 0.74rem;
+      }
+
+      .button, .file-button {
+        min-height: 44px;
+        padding: 10px 12px;
+        font-size: 0.92rem;
+      }
+
+      .tab-bar {
+        margin: 6px 6px 0;
+        padding: 6px;
+      }
+
+      .counter-card {
+        padding: 12px 14px;
+      }
+    }
+
     @media (min-width: 700px) {
       body {
         padding: 24px;
+      }
+
+      .app-shell {
+        width: min(100%, 940px);
       }
 
       .content {
@@ -1284,6 +1538,10 @@
   </div>
 
   <main class="app-shell hidden" role="application" id="appShell">
+    <div class="ios-top-bar" aria-hidden="true">
+      <div class="ios-notch"></div>
+      <span>Only For You</span>
+    </div>
     <header>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Alternar tema">🌙 Modo escuro</button>
       <div class="logo">
@@ -1370,6 +1628,11 @@
     </header>
 
     <section class="content">
+      <div class="pull-refresh-indicator" id="pullRefreshIndicator" aria-live="polite">
+        <span class="pull-refresh-icon" id="pullRefreshIcon">↺</span>
+        <span id="pullRefreshText">Puxe para atualizar</span>
+      </div>
+
       <div id="homeScreen" class="screen active">
         <div class="screen-hero">
           <p class="eyebrow">Seu cantinho</p>
@@ -1523,7 +1786,15 @@
         </div>
         <div class="music-panel">
           <p>Você pode tocar uma música importada ou ouvir a melodia padrão desse presente.</p>
-          <audio id="audioPlayer" controls preload="none"></audio>
+          <div class="music-player-shell">
+            <div class="music-player-controls">
+              <button id="musicPrevButton" type="button" aria-label="Música anterior">⏮</button>
+              <button id="musicPlayButton" type="button" aria-label="Reproduzir ou pausar">▶️</button>
+              <button id="musicNextButton" type="button" aria-label="Próxima música">⏭</button>
+            </div>
+            <div class="music-track-pill" id="musicTrackLabel">Melodia padrão</div>
+            <audio id="audioPlayer" controls preload="none"></audio>
+          </div>
           <div class="track-list" id="trackList"></div>
           <p style="opacity:.88; font-size:.95rem;">Dica: importe uma música para deixar tudo ainda mais pessoal.</p>
         </div>
@@ -1613,6 +1884,14 @@
     const photoViewer = document.getElementById('photoViewer');
     const photoViewerImage = document.getElementById('photoViewerImage');
     const photoViewerClose = document.getElementById('photoViewerClose');
+    const contentArea = document.querySelector('.content');
+    const pullRefreshIndicator = document.getElementById('pullRefreshIndicator');
+    const pullRefreshText = document.getElementById('pullRefreshText');
+    const pullRefreshIcon = document.getElementById('pullRefreshIcon');
+    const musicPrevButton = document.getElementById('musicPrevButton');
+    const musicPlayButton = document.getElementById('musicPlayButton');
+    const musicNextButton = document.getElementById('musicNextButton');
+    const musicTrackLabel = document.getElementById('musicTrackLabel');
 
     const photos = [];
     const videos = [];
@@ -1649,6 +1928,10 @@
       'O meu amor por você é simples, profundo e tão verdadeiro quanto o meu respirar.'
     ];
     const defaultMusicUrl = createDefaultMusicDataUrl();
+    let currentMusicIndex = 0;
+    let pullStartY = 0;
+    let pullDistance = 0;
+    let isPulling = false;
     const messageCard = document.getElementById('messageCard');
     const messageText = document.getElementById('messageText');
     const sweetMessageText = document.getElementById('sweetMessageText');
@@ -1745,14 +2028,25 @@
     importInput.addEventListener('change', handleImport);
     backupInput.addEventListener('change', handleBackupImport);
     exportHistoryButton.addEventListener('click', exportHistory);
+    if (contentArea) {
+      contentArea.addEventListener('touchstart', handlePullStart, { passive: true });
+      contentArea.addEventListener('touchmove', handlePullMove, { passive: false });
+      contentArea.addEventListener('touchend', handlePullEnd);
+    }
     themeToggle.addEventListener('click', toggleTheme);
     notificationsButton.addEventListener('click', enableDailyNotifications);
     scrollTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     window.addEventListener('scroll', updateScrollTopButton);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
+        checkPendingNotifications();
         schedulePeriodicNotifications();
       }
+    });
+
+    window.addEventListener('focus', () => {
+      checkPendingNotifications();
+      schedulePeriodicNotifications();
     });
     accessForm.addEventListener('submit', event => {
       event.preventDefault();
@@ -1760,9 +2054,11 @@
       if (typedCode === ACCESS_CODE) {
         accessLock.classList.add('hidden');
         appShell.classList.remove('hidden');
+        appShell.classList.add('app-opening');
         accessError.textContent = '';
         accessInput.value = '';
         initializeApp();
+        setTimeout(() => appShell.classList.remove('app-opening'), 650);
       } else {
         accessError.textContent = 'Senha incorreta. Tente novamente.';
         accessInput.value = '';
@@ -1805,9 +2101,15 @@
       copyMessageButton.addEventListener('click', copyCurrentMessage);
     }
     toggleMusicButton.addEventListener('click', toggleMusicPlayback);
+    if (musicPrevButton) musicPrevButton.addEventListener('click', () => playPreviousTrack());
+    if (musicPlayButton) musicPlayButton.addEventListener('click', toggleMusicPlayback);
+    if (musicNextButton) musicNextButton.addEventListener('click', () => playNextTrack());
     audioPlayer.addEventListener('play', updateMusicButtonText);
     audioPlayer.addEventListener('pause', updateMusicButtonText);
-    audioPlayer.addEventListener('ended', updateMusicButtonText);
+    audioPlayer.addEventListener('ended', () => {
+      updateMusicButtonText();
+      playNextTrack();
+    });
 
     function readFileAsDataUrl(file) {
       return new Promise((resolve, reject) => {
@@ -1988,20 +2290,70 @@
     }
 
     function updateMusicButtonText() {
-      if (!toggleMusicButton) return;
-      toggleMusicButton.textContent = audioPlayer && !audioPlayer.paused ? '⏸️ Pausar música' : '▶️ Tocar música';
+      if (toggleMusicButton) {
+        toggleMusicButton.textContent = audioPlayer && !audioPlayer.paused ? '⏸️ Pausar música' : '▶️ Tocar música';
+      }
+      if (musicPlayButton) {
+        musicPlayButton.textContent = audioPlayer && !audioPlayer.paused ? '⏸️' : '▶️';
+      }
+    }
+
+    function getMusicPlaylist() {
+      if (audios.length) {
+        return audios;
+      }
+      return [{ id: 'default-track', name: 'Melodia padrão', dataUrl: defaultMusicUrl, isDefault: true }];
+    }
+
+    function updateMusicTrackLabel() {
+      const playlist = getMusicPlaylist();
+      const currentTrack = playlist[currentMusicIndex] || playlist[0];
+      if (musicTrackLabel && currentTrack) {
+        musicTrackLabel.textContent = currentTrack.name || 'Melodia padrão';
+      }
+    }
+
+    function playTrackByIndex(index) {
+      const playlist = getMusicPlaylist();
+      if (!playlist.length) return;
+      currentMusicIndex = ((index % playlist.length) + playlist.length) % playlist.length;
+      const currentTrack = playlist[currentMusicIndex];
+      if (!currentTrack) return;
+      audioPlayer.src = currentTrack.dataUrl;
+      const playback = audioPlayer.play();
+      if (playback && playback.catch) {
+        playback.catch(() => {
+          statusLine.textContent = 'Não foi possível iniciar a reprodução agora.';
+        });
+      }
+      updateMusicTrackLabel();
+      statusLine.textContent = `Tocando: ${currentTrack.name}`;
+      updateMusicButtonText();
+    }
+
+    function playNextTrack() {
+      playTrackByIndex(currentMusicIndex + 1);
+    }
+
+    function playPreviousTrack() {
+      playTrackByIndex(currentMusicIndex - 1);
     }
 
     function toggleMusicPlayback() {
       if (!audioPlayer) return;
       if (audioPlayer.paused) {
-        const playback = audioPlayer.play();
-        if (playback && playback.catch) {
-          playback.catch(() => {
-            statusLine.textContent = 'Não foi possível iniciar a reprodução agora.';
-          });
+        if (!audioPlayer.src) {
+          playTrackByIndex(currentMusicIndex);
+        } else {
+          const playback = audioPlayer.play();
+          if (playback && playback.catch) {
+            playback.catch(() => {
+              statusLine.textContent = 'Não foi possível iniciar a reprodução agora.';
+            });
+          }
+          updateMusicTrackLabel();
+          statusLine.textContent = audios.length ? `Reproduzindo: ${getMusicPlaylist()[currentMusicIndex]?.name || audios[audios.length - 1].name}` : 'Reproduzindo a melodia padrão.';
         }
-        statusLine.textContent = audios.length ? `Reproduzindo: ${audios[audios.length - 1].name}` : 'Reproduzindo a melodia padrão.';
       } else {
         audioPlayer.pause();
         statusLine.textContent = 'Música pausada.';
@@ -2017,6 +2369,56 @@
       showNotificationToast.timeoutId = setTimeout(() => {
         notificationToast.classList.remove('show');
       }, 3200);
+    }
+
+    function handlePullStart(event) {
+      if (!contentArea || contentArea.scrollTop > 0) {
+        isPulling = false;
+        return;
+      }
+      pullStartY = event.touches[0].clientY;
+      pullDistance = 0;
+      isPulling = true;
+    }
+
+    function handlePullMove(event) {
+      if (!isPulling || !contentArea || contentArea.scrollTop > 0) {
+        return;
+      }
+      const currentY = event.touches[0].clientY;
+      pullDistance = Math.max(0, currentY - pullStartY);
+      if (pullDistance > 0) {
+        event.preventDefault();
+        const offset = Math.min(pullDistance, 92);
+        pullRefreshIndicator?.classList.add('active');
+        pullRefreshIndicator?.style.setProperty('--pull-offset', `${offset}px`);
+        if (pullRefreshIcon) {
+          pullRefreshIcon.style.transform = `rotate(${offset / 3}deg)`;
+        }
+        if (pullRefreshText) {
+          pullRefreshText.textContent = offset > 70 ? 'Solte para atualizar' : 'Puxe para atualizar';
+        }
+      }
+    }
+
+    function handlePullEnd() {
+      if (!isPulling) return;
+      if (pullDistance > 70) {
+        pullRefreshIndicator?.classList.add('refreshing');
+        if (pullRefreshText) {
+          pullRefreshText.textContent = 'Atualizando seu cantinho…';
+        }
+        showNotificationToast('Seu cantinho foi atualizado 💖');
+        statusLine.textContent = 'Cantinho atualizado com carinho.';
+        showRandomMessage();
+      }
+      setTimeout(() => {
+        pullRefreshIndicator?.classList.remove('active', 'refreshing');
+        if (pullRefreshText) pullRefreshText.textContent = 'Puxe para atualizar';
+        if (pullRefreshIcon) pullRefreshIcon.style.transform = '';
+      }, 500);
+      isPulling = false;
+      pullDistance = 0;
     }
 
     function showMessagePopup(title, text) {
@@ -2181,6 +2583,22 @@
         triggerPeriodicNotification();
         schedulePeriodicNotifications();
       }, delay);
+    }
+
+    function checkPendingNotifications() {
+      if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) !== 'true') {
+        return;
+      }
+      const lastSentRaw = localStorage.getItem(NOTIFICATION_LAST_SENT_KEY);
+      if (!lastSentRaw) {
+        return;
+      }
+      const lastSent = new Date(lastSentRaw);
+      const now = new Date();
+      const elapsed = now - lastSent;
+      if (elapsed >= NOTIFICATION_INTERVAL_MS) {
+        triggerPeriodicNotification();
+      }
     }
 
     async function triggerPeriodicNotification() {
@@ -2423,35 +2841,55 @@
 
     function renderMusic() {
       trackList.innerHTML = '';
-      if (!audios.length) {
+      const playlist = getMusicPlaylist();
+      if (!playlist.length) {
         trackList.innerHTML = '<p style="opacity:.82; text-align:center;">Nenhuma música importada. A melodia padrão irá tocar quando você abri-la.</p>';
         audioPlayer.src = defaultMusicUrl;
+        updateMusicTrackLabel();
         updateMusicButtonText();
         return;
       }
 
-      audioPlayer.src = audios[audios.length - 1].dataUrl;
-      audios.forEach((track, index) => {
+      if (currentMusicIndex >= playlist.length) {
+        currentMusicIndex = playlist.length - 1;
+      }
+      audioPlayer.src = playlist[currentMusicIndex]?.dataUrl || defaultMusicUrl;
+      updateMusicTrackLabel();
+      playlist.forEach((track, index) => {
         const trackItem = document.createElement('div');
         trackItem.className = 'track-item';
         const name = document.createElement('span');
         name.textContent = track.name;
         const button = document.createElement('button');
         button.type = 'button';
-        button.textContent = 'Tocar';
+        button.textContent = index === currentMusicIndex ? 'Tocando' : 'Tocar';
         button.addEventListener('click', () => {
-          audioPlayer.src = track.dataUrl;
-          audioPlayer.play().catch(() => {});
-          statusLine.textContent = `Tocando: ${track.name}`;
-          updateMusicButtonText();
+          currentMusicIndex = index;
+          playTrackByIndex(index);
         });
         trackItem.appendChild(name);
         trackItem.appendChild(button);
         trackList.appendChild(trackItem);
       });
+      updateMusicButtonText();
+    }
+
+    function getScreenFromLocation() {
+      const hash = (window.location.hash || '').replace(/^#/, '').trim();
+      const validScreens = ['home', 'photos', 'videos', 'birthday', 'sweetMessages', 'specialMessages', 'music', 'diary'];
+      return validScreens.includes(hash) ? hash : 'home';
+    }
+
+    function updateScreenUrl(screenName) {
+      const nextHash = screenName === 'home' ? '' : `#${screenName}`;
+      const nextUrl = `${window.location.pathname}${nextHash}${window.location.search}`;
+      if (window.location.pathname + window.location.search + window.location.hash !== nextUrl) {
+        history.pushState({ screen: screenName }, '', nextUrl);
+      }
     }
 
     function showScreen(screenName) {
+      const normalizedScreen = screenName || 'home';
       const screens = {
         home: homeScreen,
         photos: photosScreen,
@@ -2465,28 +2903,40 @@
 
       Object.entries(screens).forEach(([name, screen]) => {
         if (screen) {
-          screen.classList.toggle('active', name === screenName);
+          screen.classList.toggle('active', name === normalizedScreen);
         }
       });
 
+      if (normalizedScreen !== 'home') {
+        document.querySelectorAll('.screen').forEach(screen => {
+          screen.classList.add('sheet-screen');
+        });
+      } else {
+        document.querySelectorAll('.screen').forEach(screen => {
+          screen.classList.remove('sheet-screen');
+        });
+      }
+
       document.querySelectorAll('.tab-button').forEach(button => {
-        button.classList.toggle('active', button.dataset.screen === screenName);
+        button.classList.toggle('active', button.dataset.screen === normalizedScreen);
       });
 
-      if (screenName === 'photos' && photos.length) {
+      updateScreenUrl(normalizedScreen);
+
+      if (normalizedScreen === 'photos' && photos.length) {
         statusLine.textContent = `Mostrando ${photos.length} foto(s).`;
-      } else if (screenName === 'videos' && videos.length) {
+      } else if (normalizedScreen === 'videos' && videos.length) {
         statusLine.textContent = `Mostrando ${videos.length} vídeo(s).`;
-      } else if (screenName === 'birthday') {
+      } else if (normalizedScreen === 'birthday') {
         statusLine.textContent = 'Uma mensagem especial para você, Vida. 🎂';
         startBirthdayCelebration();
-      } else if (screenName === 'sweetMessages') {
+      } else if (normalizedScreen === 'sweetMessages') {
         statusLine.textContent = 'Sua mensagem doce agora tem uma tela própria.';
-      } else if (screenName === 'specialMessages') {
+      } else if (normalizedScreen === 'specialMessages') {
         statusLine.textContent = 'Sua mensagem safada agora tem uma tela própria.';
-      } else if (screenName === 'music') {
+      } else if (normalizedScreen === 'music') {
         statusLine.textContent = `Tocando ${audios.length ? audios[audios.length - 1].name : 'melodia padrão'}.`;
-      } else if (screenName === 'diary') {
+      } else if (normalizedScreen === 'diary') {
         statusLine.textContent = 'Seu diário íntimo está pronto.';
       } else {
         statusLine.textContent = 'Bem-vinda ao seu cantinho especial.';
@@ -2582,7 +3032,7 @@
       updateMusicButtonText();
       renderDiaryEntries();
       showRandomMessage();
-      showScreen('home');
+      showScreen(getScreenFromLocation());
       if (!localStorage.getItem(WELCOME_POPUP_KEY)) {
         showWelcomePopup();
       }
@@ -2593,6 +3043,7 @@
       applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
       if (localStorage.getItem(NOTIFICATION_ENABLED_KEY) === 'true') {
         updateNotificationStatus('🔔 Lembretes ativos: a cada 5 horas');
+        checkPendingNotifications();
         schedulePeriodicNotifications();
       }
       updateRelationshipCounter();
@@ -2605,6 +3056,14 @@
         });
       }
     }
+
+    window.addEventListener('hashchange', () => {
+      showScreen(getScreenFromLocation());
+    });
+
+    window.addEventListener('popstate', () => {
+      showScreen(getScreenFromLocation());
+    });
 
     window.addEventListener('load', () => {
       accessLock.classList.remove('hidden');
